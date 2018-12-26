@@ -10,12 +10,17 @@ import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
 import javax.swing.JToggleButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JRadioButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class NewProReg extends JPanel {
 	private JTextField textField;
@@ -28,60 +33,60 @@ public class NewProReg extends JPanel {
 	 */
 	public NewProReg() {
 		setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("신상품 등록");
-		lblNewLabel.setForeground(Color.BLACK);
-		lblNewLabel.setFont(new Font("굴림", Font.BOLD, 18));
-		lblNewLabel.setBounds(12, 10, 200, 48);
-		add(lblNewLabel);
-		
-		JButton btnNewButton = new JButton("확인");
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(376, 63, 62, 23);
-		add(btnNewButton);
-		
+
+		TitledBorder Tb = new TitledBorder(new LineBorder(Color.black), "신상품등록");
+		Tb.setTitleColor(Color.black);
+		Tb.setTitleFont(new Font("굴림", Font.BOLD, 18));
+
 		JPanel panel = new JPanel();
-		panel.setBounds(12, 96, 426, 194);
+		panel.setBounds(12, 22, 426, 240);
 		add(panel);
 		panel.setLayout(null);
-		
+		panel.setBorder(Tb);
+
 		JLabel lblNewLabel_2 = new JLabel("품번 : ");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_2.setBounds(0, 1, 213, 48);
-		lblNewLabel_2.setBackground(Color.BLUE);
+		lblNewLabel_2.setBounds(12, 40, 62, 29);
 		panel.add(lblNewLabel_2);
-		
+
+		JLabel label = new JLabel("색상 : ");
+		label.setBounds(12, 80, 62, 29);
+		panel.add(label);
+
+		JLabel label_1 = new JLabel("사이즈 : ");
+		label_1.setBounds(12, 120, 62, 29);
+		panel.add(label_1);
+
+		JLabel label_2 = new JLabel("판매단가 : ");
+		label_2.setBounds(12, 160, 62, 29);
+		panel.add(label_2);
+
 		textField = new JTextField();
-		textField.setBounds(213, 10, 213, 29);
+		textField.setBounds(74, 40, 213, 29);
 		panel.add(textField);
 		textField.setColumns(10);
-		
-		JLabel lblNewLabel_3 = new JLabel("색상 : ");
-		lblNewLabel_3.setBounds(0, 49, 213, 48);
-		panel.add(lblNewLabel_3);
-		
+
 		textField_1 = new JTextField();
-		textField_1.setBounds(213, 58, 213, 29);
+		textField_1.setBounds(74, 79, 213, 29);
 		panel.add(textField_1);
 		textField_1.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("사이즈 : ");
-		lblNewLabel_1.setBounds(0, 97, 213, 48);
-		panel.add(lblNewLabel_1);
-		
+
 		textField_2 = new JTextField();
-		textField_2.setBounds(213, 107, 213, 29);
+		textField_2.setBounds(74, 121, 213, 29);
 		panel.add(textField_2);
 		textField_2.setColumns(10);
-		
-		JLabel lblNewLabel_4 = new JLabel("판매단가 :");
-		lblNewLabel_4.setBounds(0, 145, 213, 48);
-		panel.add(lblNewLabel_4);
-		
+
 		textField_3 = new JTextField();
-		textField_3.setBounds(213, 155, 213, 29);
+		textField_3.setBounds(74, 160, 213, 29);
 		panel.add(textField_3);
 		textField_3.setColumns(10);
+
+		JButton btnNewButton = new JButton("확인");
+		btnNewButton.setBounds(333, 67, 70, 58);
+		panel.add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 
 	}
 }
