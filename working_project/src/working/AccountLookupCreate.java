@@ -107,7 +107,7 @@ public class AccountLookupCreate extends JPanel {
 		JPanel p2 = new JPanel();
 		p2.setBounds(230, 163, 278, 32);
 		add(p2);
-		ButtonGroup grp2 = new ButtonGroup();
+		ButtonGroup grp2 = new ButtonGroup(); // 하나만 선택되게 하기위해서, 같은 그룹에서는 하나만 선택이된다.
 		JRadioButton[] rb2 = new JRadioButton[3];
 		
 		rb2[0] = new JRadioButton("본사+매장");

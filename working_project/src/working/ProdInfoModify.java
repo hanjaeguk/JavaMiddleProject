@@ -2,6 +2,7 @@ package working;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.LineBorder;
@@ -16,6 +17,11 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -59,10 +65,64 @@ public class ProdInfoModify extends JPanel {
 		p1.add(ProNoTextField);
 		ProNoTextField.setColumns(10);
 
+		JLabel OriPriceLabel = new JLabel("기존 판매단가 :");
+		OriPriceLabel.setBounds(12, 57, 100, 36);
+		p1.add(OriPriceLabel);
+		OriPriceLabel.setFont(new Font("굴림", Font.BOLD, 13));
+
+		OriTextField = new JTextField();
+		OriTextField.setBounds(118, 63, 109, 26);
+		p1.add(OriTextField);
+		OriTextField.setColumns(10);
+		OriTextField.setEditable(false);
+
 		JButton SearchButton = new JButton("조회");
 		SearchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+					String ID = "ora_user3";
+					String PW = "han3";
+					String sql = null;
+
+					Connection conn = null;
+					Statement stmt = null;
+					ResultSet rs = null;
+
+					// DB 드라이버 로딩
+					try {
+						Class.forName("oracle.jdbc.driver.OracleDriver");
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					} // 1try end
+
+					// DB USER 접속
+					try {
+						conn = DriverManager.getConnection(URL, ID, PW);
+						stmt = conn.createStatement();
+						sql = "SELECT DISTINCT P_PRICE FROM PRODUCT WHERE P_NO =" + 
+								ProNoTextField.getText();
+						rs = stmt.executeQuery(sql);
+						while(rs.next()) {
+							String str = rs.getString(1);
+							OriTextField.setText(str);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} finally {
+						try {
+							stmt.close();
+							conn.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+
 		});
 		SearchButton.setBounds(180, 27, 70, 25);
 		p1.add(SearchButton);
@@ -73,16 +133,6 @@ public class ProdInfoModify extends JPanel {
 		ChangePriceLabel.setFont(new Font("굴림", Font.BOLD, 13));
 		ChangePriceLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-		OriTextField = new JTextField();
-		OriTextField.setBounds(118, 63, 109, 26);
-		p1.add(OriTextField);
-		OriTextField.setColumns(10);
-
-		JLabel OriPriceLabel = new JLabel("기존 판매단가 :");
-		OriPriceLabel.setBounds(12, 57, 100, 36);
-		p1.add(OriPriceLabel);
-		OriPriceLabel.setFont(new Font("굴림", Font.BOLD, 13));
-
 		ChangeTextField = new JTextField();
 		ChangeTextField.setBounds(338, 63, 109, 26);
 		p1.add(ChangeTextField);
@@ -92,7 +142,50 @@ public class ProdInfoModify extends JPanel {
 		OkButton.setBounds(458, 63, 70, 25);
 		p1.add(OkButton);
 		OkButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+					String ID = "ora_user3";
+					String PW = "han3";
+					String sql = null;
+
+					Connection conn = null;
+					Statement stmt = null;
+
+					// DB 드라이버 로딩
+					try {
+						Class.forName("oracle.jdbc.driver.OracleDriver");
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					} // 1try end
+
+					// DB USER 접속
+					try {
+						conn = DriverManager.getConnection(URL, ID, PW);
+						stmt = conn.createStatement();
+						sql = "UPDATE PRODUCT SET P_PRICE = "+
+								ChangeTextField.getText()+"WHERE P_NO = "+
+								ProNoTextField.getText();
+						stmt.executeQuery(sql);
+						JOptionPane.showMessageDialog(null, "변경되었습니다.");			
+
+					} catch (SQLException e) {
+						e.printStackTrace(); 
+					} finally {
+						try {
+							stmt.close();
+							conn.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				
 			}
 		});
 		OkButton.setFont(new Font("굴림", Font.PLAIN, 12));
@@ -102,6 +195,7 @@ public class ProdInfoModify extends JPanel {
 
 		JPanel p2 = new JPanel();
 		p2.setBounds(12, 169, 540, 205);
+
 		add(p2);
 		p2.setLayout(null);
 		p2.setBorder(Tb2);
