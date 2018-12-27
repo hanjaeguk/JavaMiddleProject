@@ -8,8 +8,8 @@ public class Start {
 		Start start = new Start();
 		
 		// loginView show
-		start.loginView = new LoginView(); 
-		start.loginView.setMain(start);
+		start.loginView = new LoginView(); // 로그인창 보이기 
+		start.loginView.setMain(start); // 로그인창에게 메인 클래스 보내기
 	}
 	
 	public void showMainFrame() {

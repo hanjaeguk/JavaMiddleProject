@@ -79,48 +79,11 @@ public class ProdInfoModify extends JPanel {
 		JButton SearchButton = new JButton("조회");
 		SearchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-					String ID = "ora_user3";
-					String PW = "han3";
-					String sql = null;
-
-					Connection conn = null;
-					Statement stmt = null;
-					ResultSet rs = null;
-
-					// DB 드라이버 로딩
-					try {
-						Class.forName("oracle.jdbc.driver.OracleDriver");
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					} // 1try end
-
-					// DB USER 접속
-					try {
-						conn = DriverManager.getConnection(URL, ID, PW);
-						stmt = conn.createStatement();
-						sql = "SELECT DISTINCT P_PRICE FROM PRODUCT WHERE P_NO =" + 
-								ProNoTextField.getText();
-						rs = stmt.executeQuery(sql);
-						while(rs.next()) {
-							String str = rs.getString(1);
-							OriTextField.setText(str);
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-					} finally {
-						try {
-							stmt.close();
-							conn.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				String price = "0";
+				DBcon db = new DBcon();
+				db.SearchPro(ProNoTextField.getText());
+				price = db.getPrice().toString();
+				OriTextField.setText(price);
 			}
 
 		});
@@ -144,47 +107,10 @@ public class ProdInfoModify extends JPanel {
 		OkButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-					String ID = "ora_user3";
-					String PW = "han3";
-					String sql = null;
-
-					Connection conn = null;
-					Statement stmt = null;
-
-					// DB 드라이버 로딩
-					try {
-						Class.forName("oracle.jdbc.driver.OracleDriver");
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					} // 1try end
-
-					// DB USER 접속
-					try {
-						conn = DriverManager.getConnection(URL, ID, PW);
-						stmt = conn.createStatement();
-						sql = "UPDATE PRODUCT SET P_PRICE = "+
-								ChangeTextField.getText()+"WHERE P_NO = "+
-								ProNoTextField.getText();
-						stmt.executeQuery(sql);
-						JOptionPane.showMessageDialog(null, "변경되었습니다.");			
-
-					} catch (SQLException e) {
-						e.printStackTrace(); 
-					} finally {
-						try {
-							stmt.close();
-							conn.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
+				String c_price =ChangeTextField.getText();
+				String p_no = ProNoTextField.getText();
+				DBcon db = new DBcon();
+				db.UpdatePrice(c_price, p_no);
 				
 			}
 		});
@@ -206,25 +132,130 @@ public class ProdInfoModify extends JPanel {
 		p2.add(ShopLabel);
 
 		JComboBox ShopComboBox = new JComboBox();
-		ShopComboBox.setBounds(67, 31, 113, 26);
+		ShopComboBox.setBounds(67, 31, 148, 26);
 		ShopComboBox.setFont(new Font("굴림", Font.PLAIN, 13));
-		ShopComboBox.setModel(new DefaultComboBoxModel(new String[] { "선택", "매장1", "매장2" }));
 		ShopComboBox.setMaximumRowCount(100);
 		p2.add(ShopComboBox);
 
+		try {
+			String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+			String ID = "ora_user3";
+			String PW = "han3";
+			String sql = null;
+
+			Connection conn = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				conn = DriverManager.getConnection(URL, ID, PW);
+				stmt = conn.createStatement();
+				sql = "select distinct sh.s_name from shop sh, stock st "
+						+ "where sh.s_code = st.s_code and st.p_qty > 0";
+				rs = stmt.executeQuery(sql);
+				while (rs.next()) {
+					ShopComboBox.addItem(rs.getString(1));
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					stmt.close();
+					conn.close();
+					rs.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		JLabel ProNoLabel_1 = new JLabel("품번 :");
-		ProNoLabel_1.setBounds(194, 26, 59, 36);
+		ProNoLabel_1.setBounds(239, 26, 59, 36);
 		ProNoLabel_1.setFont(new Font("굴림", Font.BOLD, 13));
 		p2.add(ProNoLabel_1);
 
 		ProNoTextField_1 = new JTextField();
 		ProNoTextField_1.setColumns(10);
-		ProNoTextField_1.setBounds(249, 32, 109, 26);
+		ProNoTextField_1.setBounds(290, 32, 109, 26);
 		p2.add(ProNoTextField_1);
+		
+		JComboBox ColorComboBox = new JComboBox();
+		ColorComboBox.setBounds(67, 77, 105, 26);
+		p2.add(ColorComboBox);
+		ColorComboBox.setMaximumRowCount(100);
+		ColorComboBox.setFont(new Font("굴림", Font.PLAIN, 13));
 
 		JButton SearchButton_1 = new JButton("조회");
+		SearchButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				try {
+					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+					String ID = "ora_user3";
+					String PW = "han3";
+					String sql = null;
+
+					Connection conn = null;
+					Statement stmt = null;
+					ResultSet rs = null;
+
+					try {
+						Class.forName("oracle.jdbc.driver.OracleDriver");
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+
+					try {
+						conn = DriverManager.getConnection(URL, ID, PW);
+						stmt = conn.createStatement();
+						
+						sql = "select distinct pr.p_color from product pr,stock st,shop sh\r\n" + 
+								"Where pr.p_code = st.p_code and\r\n" + 
+								"sh.s_code=st.s_code and\r\n" + 
+								"pr.p_no =" + ProNoTextField_1.getText() +
+								"and sh.s_name ='"+ShopComboBox.getSelectedItem()+"'";
+
+						rs = stmt.executeQuery(sql);
+						
+						while(rs.next()) {
+							ColorComboBox.addItem(rs.getString(1));
+						}
+
+						
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} finally {
+						try {
+							stmt.close();
+							conn.close();
+							rs.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+
+		
+		
 		SearchButton_1.setFont(new Font("굴림", Font.PLAIN, 12));
-		SearchButton_1.setBounds(370, 32, 70, 25);
+		SearchButton_1.setBounds(411, 32, 70, 25);
 		p2.add(SearchButton_1);
 
 		JLabel ColorLabel = new JLabel("색상 :");
@@ -232,24 +263,20 @@ public class ProdInfoModify extends JPanel {
 		p2.add(ColorLabel);
 		ColorLabel.setFont(new Font("굴림", Font.BOLD, 13));
 
-		JComboBox ColorComboBox = new JComboBox();
-		ColorComboBox.setBounds(67, 77, 105, 26);
-		p2.add(ColorComboBox);
-		ColorComboBox.setModel(new DefaultComboBoxModel(new String[] { "선택", "색상1", "색상2" }));
-		ColorComboBox.setMaximumRowCount(100);
-		ColorComboBox.setFont(new Font("굴림", Font.PLAIN, 13));
+		
 
 		JScrollPane SizeScrollPane = new JScrollPane();
 		SizeScrollPane.setBounds(67, 113, 373, 63);
 		p2.add(SizeScrollPane);
-
+		
 		SizeTable = new JTable();
 		SizeScrollPane.setViewportView(SizeTable);
 		SizeTable.setFont(new Font("굴림", Font.PLAIN, 13));
-		SizeTable.setModel(new DefaultTableModel(new Object[][] { { null, 1, null, null }, },
+		SizeTable.setModel(new DefaultTableModel(new Object[][] { { }, },
 				new String[] { "S", "M", "L", "XL" }));
 
 		SizeTable.setRowHeight(35);
+
 
 		JLabel SizeLabel = new JLabel("사이즈 :");
 		SizeLabel.setBounds(11, 118, 67, 26);

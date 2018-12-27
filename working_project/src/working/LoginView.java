@@ -12,19 +12,20 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import javax.swing.JRadioButton;
-
-public class LoginView extends JFrame {
+public class LoginView extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JTextField idField;
 	private JPasswordField pwField;
+	JButton btnLogin;
 	private Start start;
 	JRadioButton[] rdbtn = new JRadioButton[2];
 	String[] radioText = { "매장", "본사" };
+	String radio = "매장";
 
 	public LoginView() {
 		// layout
@@ -36,7 +37,6 @@ public class LoginView extends JFrame {
 		contentPane.setLayout(null);
 
 		// radio button
-		MyItemListener itemlis = new MyItemListener(); // 아이템 감시자
 		ButtonGroup g = new ButtonGroup(); // 라디오 버튼 묶을 그룹
 
 		// 라디오 버튼 그룹에 버튼 2개 생성하여 부착
@@ -45,7 +45,7 @@ public class LoginView extends JFrame {
 			g.add(rdbtn[i]);
 			add(rdbtn[i]);
 
-			rdbtn[i].addItemListener(itemlis); // 감시자 부착
+			rdbtn[i].addActionListener(this);
 		}
 		
 		rdbtn[0].setSelected(true); // 해당 버튼이 선택된 상태
@@ -73,32 +73,15 @@ public class LoginView extends JFrame {
 		contentPane.add(pwField);
 
 		// button
-		JButton btnNewButton = new JButton("LOGIN");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				loginCheck();
-			}
-		});
-		btnNewButton.setBounds(251, 252, 97, 23);
-		contentPane.add(btnNewButton);
+		btnLogin = new JButton("LOGIN");
+		btnLogin.addActionListener(this);
+		btnLogin.setBounds(251, 252, 97, 23);
+		contentPane.add(btnLogin);
 		
 		
 		// show
 		setVisible(true);
-	}
-	
-	// radio listener
-	class MyItemListener implements ItemListener {
-
-		@Override
-		public void itemStateChanged(ItemEvent arg0) {
-			if (rdbtn[0].isSelected()) {
-				// 매장 선택
-			} else {
-				// 본사 선택
-			}
-		}
-	}
+	}	
 
 	// login check
 	public void loginCheck() {
@@ -115,4 +98,32 @@ public class LoginView extends JFrame {
 	public void setMain(Start start) {
 		this.start = start;
 	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// radio btn result check
+		String es = e.getActionCommand();
+		if (es.equals(rdbtn[0].getText())) {
+			this.radio = es;
+		}else if (es.equals(rdbtn[1].getText())){
+			this.radio = es;
+		}
+		
+		// login btn 
+		// +) id/pw오류 시 텍스트필드 reset, 커서이동
+		if (e.getSource() == btnLogin) {
+			DBcon dbcon = new DBcon();
+			String id = idField.getText();
+			String pw = new String(pwField.getPassword());
+			
+			dbcon.loginCheck(id, pw, radio);
+			if(dbcon.getLogCnt() == 1) {
+				JOptionPane.showMessageDialog(null, "로그인 되었습니다.");
+				start.showMainFrame();
+			} else {
+				JOptionPane.showMessageDialog(null, "ID/PW를 확인해주세요.");
+			}			
+		}
+	}
+	
 }

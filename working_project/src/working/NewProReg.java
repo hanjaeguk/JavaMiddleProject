@@ -93,60 +93,17 @@ public class NewProReg extends JPanel {
 
 		OkBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				try {					
-					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-					String ID = "ora_user3";
-					String PW = "han3";
-					String sql = null;		
-
-					Connection conn = null;
-					Statement stmt = null;
-					
-					// DB 드라이버 로딩
-					try {
-						Class.forName("oracle.jdbc.driver.OracleDriver");
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					} // 1try end
-
-					// DB USER 접속
-					try {
-						conn = DriverManager.getConnection(URL, ID, PW);
-						stmt = conn.createStatement();
-						
-//							String p_no = p_no_field.getText();
-//							String p_price = price_field.getText();
-//							int no = Integer.parseInt(p_no);
-//							int price = Integer.parseInt(p_price);
-							
-							sql =	"INSERT INTO PRODUCT VALUES(UPPER('"+
-									p_no_field.getText()+
-									color_field.getText()+
-									size_field.getText()+"'),"+
-									p_no_field.getText()+",UPPER('"+
-									color_field.getText()+"'),UPPER('"+
-									size_field.getText()+"'),"+
-									price_field.getText()+")";
-							
-							stmt.executeUpdate(sql);
-							JOptionPane.showMessageDialog(null, "입력되었습니다.");			
-
-					} catch (SQLException e) {
-						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "이미 있는 품번입니다.");
-					} finally {
-						try {
-							stmt.close();
-							conn.close();
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}
-
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "형식에 맞지 않습니다.");
-				}
+				
+				String p_code = p_no_field.getText()+color_field.getText()+size_field.getText();
+				String p_no = p_no_field.getText();
+				String p_color = color_field.getText();
+				String p_size = size_field.getText();
+				String p_price = price_field.getText();
+				
+				DBcon db = new DBcon();
+				db.Insertpro(p_code, p_no, p_color, p_size, p_price);
+				
+				
 			}
 
 		});

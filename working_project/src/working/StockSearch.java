@@ -1,10 +1,10 @@
 package working;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,23 +14,21 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.JRadioButton;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 
-public class StockSearch extends JPanel {
+public class StockSearch extends JPanel implements ActionListener {
 	JLabel lab;
-	DefaultTableModel firstTabModel, secTabModel;
-	JTable firstTab, secTab;
-	JScrollPane firstSc, secSc;
-	private JRadioButton[] rdbtn = new JRadioButton[2];
+	DefaultTableModel firstTabModel;
+	JTable firstTab;
+	JScrollPane firstSc;
 	private JButton btnSearch;
-	String[] radioText = { "매장별", "사이즈별" };
-	private JRadioButton rdbtnH;
-	private JRadioButton rdbtnJj;
-	private JRadioButton rdbtnKk;
-
+	private JLabel lblCode, lblPrice, lblPriceNum;
+	private JTextField txtCode;
+	
+	String price = "0";
+	
 	public StockSearch() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -48,68 +46,59 @@ public class StockSearch extends JPanel {
 		// 2
 		JPanel p2 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) p2.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.RIGHT);
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		add(p2);
-		// radio*
-		MyItemListener itemlis = new MyItemListener(); // 아이템 감시자
-		ButtonGroup g = new ButtonGroup(); // 라디오 버튼 묶을 그룹
 
-		for (int i = 0; i < rdbtn.length; i++) {
-			rdbtn[i] = new JRadioButton(radioText[i]);
-			g.add(rdbtn[i]);
-			p2.add(rdbtn[i]); // 라디오 버튼 그룹에 버튼 2개 생성하여 부착
+		lblCode = new JLabel("품번");
+		p2.add(lblCode);
+		txtCode = new JTextField();
+		txtCode.setColumns(10);
+		p2.add(txtCode);
 
-			rdbtn[i].addItemListener(itemlis); // 감시자 부착
-		}
-		rdbtn[0].setSelected(true); // 해당 버튼이 선택된 상태
-
-		// btn
 		btnSearch = new JButton("조회");
+		btnSearch.addActionListener(this);
 		p2.add(btnSearch);
+		
+		lblPrice = new JLabel(" 판매단가 : ");
+		p2.add(lblPrice);		
+		lblPriceNum = new JLabel(price);
+		p2.add(lblPriceNum);
 
 		// 3
-		String firstTabName[] = { "품 번", "판매단가" };
-		Object firstData[][] = { { "181001", "59,000" } };
+		JPanel p3 = new JPanel();
+		FlowLayout fl_p3 = (FlowLayout) p3.getLayout();
+		fl_p3.setAlignment(FlowLayout.RIGHT);
+		add(p3);
+
+		// 4
+		String firstTabName[] = { "색상", "사이즈", "매장코드", "매장명", "전화번호", "재고" };
+		Object firstData[][] = new Object[0][6];
 		firstTabModel = new DefaultTableModel(firstData, firstTabName);
 		firstTab = new JTable(firstTabModel);
 		firstSc = new JScrollPane(firstTab);
-		firstSc.setPreferredSize(new Dimension(450, 100));
 		add(firstSc);
-
-		// 4
-		String secTabName[] = { "색상", "사이즈", "매장코드", "매장명", "전화번호", "재고" };
-		Object secData[][] = { { "BK", "S", "H0001", "본사창고", "031-777-1111", "5" },
-				{ "BK", "M", "H0001", "본사창고", "031-777-1111", "4" },
-				{ "BK", "S", "S3210", "뉴코아광명", "010-8888-8888", "3" } };
-		secTabModel = new DefaultTableModel(secData, secTabName);
-		secTab = new JTable(secTabModel);
-		secSc = new JScrollPane(secTab);
-		add(secSc);
 
 		// table center align
 		DefaultTableCellRenderer tCellRenderer = new DefaultTableCellRenderer();
 		tCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
 		TableColumnModel t1ColModel = firstTab.getColumnModel();
-		TableColumnModel t2ColModel = secTab.getColumnModel();
 
 		for (int i = 0; i < t1ColModel.getColumnCount(); i++)
 			t1ColModel.getColumn(i).setCellRenderer(tCellRenderer);
-
-		for (int i = 0; i < t2ColModel.getColumnCount(); i++)
-			t2ColModel.getColumn(i).setCellRenderer(tCellRenderer);
 	}
 
-	// radio listener
-	class MyItemListener implements ItemListener {
-
-		@Override
-		public void itemStateChanged(ItemEvent arg0) {
-			if (rdbtn[0].isSelected()) {
-				// 매장별
-			} else {
-				// 사이즈별
-			}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSearch) {
+			DBcon dbcon = new DBcon();
+			String code = txtCode.getText();
+			
+			dbcon.clear(firstTab);
+			dbcon.stock_select(firstTab,code);
+			price = dbcon.getPrice().toString();
+			lblPriceNum.setText(price);
 		}
 	}
 }
+
