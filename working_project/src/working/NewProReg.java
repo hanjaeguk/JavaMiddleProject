@@ -1,5 +1,4 @@
 package working;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,11 +33,15 @@ public class NewProReg extends JPanel {
 	private JTextField color_field;
 	private JTextField size_field;
 	private JTextField price_field;
+	
+	private DBcon myDBcon;
 
-	/**
-	 * Create the panel.
-	 */
-	public NewProReg() {
+	private void setDBcon(DBcon dbcon) {
+		myDBcon = dbcon;
+	}
+	
+	public NewProReg(DBcon dbcon) {
+		setDBcon(dbcon);
 		setLayout(null);
 
 		TitledBorder Tb = new TitledBorder(new LineBorder(Color.black), "신상품등록");
@@ -100,14 +103,8 @@ public class NewProReg extends JPanel {
 				String p_size = size_field.getText();
 				String p_price = price_field.getText();
 				
-				DBcon db = new DBcon();
-				db.Insertpro(p_code, p_no, p_color, p_size, p_price);
-				
-				
+				myDBcon.Insertpro(p_code, p_no, p_color, p_size, p_price);				
 			}
-
 		});
-
 	}
 }
-

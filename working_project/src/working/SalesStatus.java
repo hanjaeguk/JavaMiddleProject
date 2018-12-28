@@ -18,21 +18,24 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 public class SalesStatus extends JPanel implements ActionListener{
-	JLabel lab, dateLab, totalLab;
-	DefaultTableModel firstTabModel;
-	JTable firstTab;
-	JScrollPane firstSc;
+	private JLabel lab, dateLab, totalLab;
+	private DefaultTableModel firstTabModel;
+	private JTable firstTab;
+	private JScrollPane firstSc;
 	private JComboBox<String> dateComboBox;
-	private JButton btnSearch;
-	JPanel p2;
+	private JButton btnSearch, btnEx;
+	
+	private DBcon myDBcon;
 
 	String date[] = { "2018-09", "2018-10", "2018-11", "2018-12" };
-	
-	private JButton btnEx;
-	
 	String total = "1,406,100";
 	
-	public SalesStatus() {
+	private void setDBcon(DBcon dbcon) {
+		myDBcon = dbcon;
+	}
+	
+	public SalesStatus(DBcon dbcon) {
+		setDBcon(dbcon);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// 1
@@ -47,7 +50,7 @@ public class SalesStatus extends JPanel implements ActionListener{
 		lab.setFont(new Font("굴림", Font.PLAIN, 18));
 		 
 		// 2
-		 p2 = new JPanel();
+		JPanel p2 = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) p2.getLayout();
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
 		add(p2);
@@ -57,7 +60,7 @@ public class SalesStatus extends JPanel implements ActionListener{
 		p2.add(dateLab);
 
 			//* 데이터 있는 월만 가져오기 가능?
-		dateComboBox = new JComboBox(date);
+		dateComboBox = new JComboBox<String>(date);
 		p2.add(dateComboBox);
 
 		btnSearch = new JButton("조회");

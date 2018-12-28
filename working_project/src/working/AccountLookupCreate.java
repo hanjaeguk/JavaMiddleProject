@@ -20,10 +20,14 @@ public class AccountLookupCreate extends JPanel {
 	private JTable table;
 	private JTable table_1;
 
-	/**
-	 * Create the panel.
-	 */
-	public AccountLookupCreate() {
+	private DBcon myDBcon;
+	
+	private void setDBcon(DBcon dbcon) {
+		myDBcon = dbcon;
+	}
+	
+	public AccountLookupCreate(DBcon dbcon) {
+		setDBcon(dbcon);
 		setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("계정 생성");
@@ -107,7 +111,7 @@ public class AccountLookupCreate extends JPanel {
 		JPanel p2 = new JPanel();
 		p2.setBounds(230, 163, 278, 32);
 		add(p2);
-		ButtonGroup grp2 = new ButtonGroup(); // 하나만 선택되게 하기위해서, 같은 그룹에서는 하나만 선택이된다.
+		ButtonGroup grp2 = new ButtonGroup();
 		JRadioButton[] rb2 = new JRadioButton[3];
 		
 		rb2[0] = new JRadioButton("본사+매장");

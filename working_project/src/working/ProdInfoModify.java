@@ -33,11 +33,14 @@ public class ProdInfoModify extends JPanel {
 	private JTextField ProNoTextField_1;
 	private JTable SizeTable;
 
-	/**
-	 * Create the panel.
-	 */
+	private DBcon myDBcon;
+	
+	private void setDBcon(DBcon dbcon) {
+		myDBcon = dbcon;
+	}
 
-	public ProdInfoModify() {
+	public ProdInfoModify(DBcon dbcon) {
+		setDBcon(dbcon);
 		setLayout(null);
 
 		JLabel Title = new JLabel("상품정보 수정");
@@ -139,8 +142,8 @@ public class ProdInfoModify extends JPanel {
 
 		try {
 			String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-			String ID = "ora_user3";
-			String PW = "han3";
+			String ID = "project1";
+			String PW = "pro1";
 			String sql = null;
 
 			Connection conn = null;
@@ -156,7 +159,7 @@ public class ProdInfoModify extends JPanel {
 			try {
 				conn = DriverManager.getConnection(URL, ID, PW);
 				stmt = conn.createStatement();
-				sql = "select distinct sh.s_name from shop sh, stock st "
+				sql = "select distinct sh.s_name from store sh, stock st "
 						+ "where sh.s_code = st.s_code and st.p_qty > 0";
 				rs = stmt.executeQuery(sql);
 				while (rs.next()) {
@@ -169,7 +172,7 @@ public class ProdInfoModify extends JPanel {
 				try {
 					stmt.close();
 					conn.close();
-					rs.close();
+					//rs.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -201,8 +204,8 @@ public class ProdInfoModify extends JPanel {
 
 				try {
 					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-					String ID = "ora_user3";
-					String PW = "han3";
+					String ID = "project1";
+					String PW = "pro1";
 					String sql = null;
 
 					Connection conn = null;

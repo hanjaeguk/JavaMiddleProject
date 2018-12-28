@@ -1,9 +1,6 @@
 package working;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -18,12 +15,13 @@ import javax.swing.border.EmptyBorder;
 
 public class LoginView extends JFrame implements ActionListener{
 
+	private Start start;
 	private JPanel contentPane;
 	private JTextField idField;
 	private JPasswordField pwField;
-	JButton btnLogin;
-	private Start start;
-	JRadioButton[] rdbtn = new JRadioButton[2];
+	private JButton btnLogin;
+	private JRadioButton[] rdbtn = new JRadioButton[2];
+	
 	String[] radioText = { "매장", "본사" };
 	String radio = "매장";
 
@@ -38,8 +36,6 @@ public class LoginView extends JFrame implements ActionListener{
 
 		// radio button
 		ButtonGroup g = new ButtonGroup(); // 라디오 버튼 묶을 그룹
-
-		// 라디오 버튼 그룹에 버튼 2개 생성하여 부착
 		for (int i = 0; i < rdbtn.length; i++) {
 			rdbtn[i] = new JRadioButton(radioText[i]);
 			g.add(rdbtn[i]);
@@ -47,12 +43,9 @@ public class LoginView extends JFrame implements ActionListener{
 
 			rdbtn[i].addActionListener(this);
 		}
-		
 		rdbtn[0].setSelected(true); // 해당 버튼이 선택된 상태
 		rdbtn[0].setBounds(240, 84, 62, 23);
-		rdbtn[1].setBounds(317, 84, 121, 23);
-		
-		////////////////////////////////////////
+		rdbtn[1].setBounds(317, 84, 121, 23);		
 
 		// label, field
 		JLabel lblId = new JLabel("ID :");
@@ -77,22 +70,9 @@ public class LoginView extends JFrame implements ActionListener{
 		btnLogin.addActionListener(this);
 		btnLogin.setBounds(251, 252, 97, 23);
 		contentPane.add(btnLogin);
-		
-		
-		// show
+			
 		setVisible(true);
 	}	
-
-	// login check
-	public void loginCheck() {
-		if (idField.getText().equals("a") && new String(pwField.getPassword()).equals("a")) {
-			JOptionPane.showMessageDialog(null, "로그인 되었습니다.");
-
-			start.showMainFrame();
-		} else {
-			JOptionPane.showMessageDialog(null, "ID/PW를 확인해주세요.");
-		}
-	}
 
 	// main conn
 	public void setMain(Start start) {
@@ -101,7 +81,7 @@ public class LoginView extends JFrame implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// radio btn result check
+		// radio btn result return
 		String es = e.getActionCommand();
 		if (es.equals(rdbtn[0].getText())) {
 			this.radio = es;
@@ -112,13 +92,15 @@ public class LoginView extends JFrame implements ActionListener{
 		// login btn 
 		// +) id/pw오류 시 텍스트필드 reset, 커서이동
 		if (e.getSource() == btnLogin) {
-			DBcon dbcon = new DBcon();
+			DBcon dbcon = new DBcon(); // db 생성
+			
 			String id = idField.getText();
 			String pw = new String(pwField.getPassword());
-			
 			dbcon.loginCheck(id, pw, radio);
+			
 			if(dbcon.getLogCnt() == 1) {
 				JOptionPane.showMessageDialog(null, "로그인 되었습니다.");
+				start.setDBcon(dbcon); // 로그인 된 계정 DB 넘기기
 				start.showMainFrame();
 			} else {
 				JOptionPane.showMessageDialog(null, "ID/PW를 확인해주세요.");
