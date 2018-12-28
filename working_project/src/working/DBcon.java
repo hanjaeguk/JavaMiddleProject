@@ -255,7 +255,7 @@ public class DBcon {
 		}
 	}
 	
-	public void Insertpro(String p_code, String p_no, String p_color, String p_size, String p_price) {
+	public void insertProduct(String p_code, String p_no, String p_color, String p_size, String p_price) {
 
 		String query = "INSERT INTO PRODUCT VALUES(UPPER('" + p_code + "')," + p_no + ",UPPER('" + p_color
 				+ "'),UPPER('" + p_size + "')," + p_price + ")";
@@ -271,7 +271,7 @@ public class DBcon {
 		} 
 	}
 	
-	public void SearchPro(String p_no) {
+	public void searchProduct(String p_no) {
 		String query = "SELECT DISTINCT P_PRICE FROM PRODUCT WHERE P_NO ="+
 						p_no;
 		try {
@@ -287,7 +287,7 @@ public class DBcon {
 		}
 	}
 	
-	public void UpdatePrice(String c_price,String p_no) {
+	public void updatePrice(String c_price,String p_no) {
 		String query = "UPDATE PRODUCT SET P_PRICE = " + c_price + "WHERE P_NO = "
 						+ p_no;
 		
@@ -300,4 +300,80 @@ public class DBcon {
 			e.printStackTrace();
 		}
 	}
+	
+	public void getStoreNameCombobox(JComboBox storeComboBox) {
+		String query = "select distinct sr.s_name from store sr, stock sc "
+				+ "where sr.s_code = sc.s_code and sc.p_qty > 0";
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				storeComboBox.addItem(rs.getString(1));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void searchStock(JComboBox colorComboBox,JComboBox getStoreComboBox,String p_no) {
+		String query = "select distinct pro.p_color from product pro,stock sc,store sr\r\n" + 
+				"Where pro.p_code = sc.p_code and\r\n" + 
+				"sr.s_code = sc.s_code and\r\n" + 
+				"pro.p_no ="+p_no+ "\r\n"+
+				"and sr.s_name ='"+getStoreComboBox.getSelectedItem()+"'";
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				colorComboBox.addItem(rs.getString(1));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void searchSize(String s_name,String p_no,String p_color) {
+		String S_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
+				"Where pro.p_code = sc.p_code and\r\n" + 
+				"sr.s_code=sc.s_code and sr.s_name = '´ºÄÚ¾Æ±¤¸í' and pro.p_no = 1811001 \r\n" + 
+				"and pro.p_color = 'BK' and pro.p_size = 'S'";
+		String M_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
+				"Where pro.p_code = sc.p_code and\r\n" + 
+				"sr.s_code=sc.s_code and sr.s_name = '´ºÄÚ¾Æ±¤¸í' and pro.p_no = 1811001 \r\n" + 
+				"and pro.p_color = 'BK' and pro.p_size = 'M'";
+		String L_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
+				"Where pro.p_code = sc.p_code and\r\n" + 
+				"sr.s_code=sc.s_code and sr.s_name = '´ºÄÚ¾Æ±¤¸í' and pro.p_no = 1811001 \r\n" + 
+				"and pro.p_color = 'BK' and pro.p_size = 'L'";
+		String XL_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
+				"Where pro.p_code = sc.p_code and\r\n" + 
+				"sr.s_code=sc.s_code and sr.s_name = '´ºÄÚ¾Æ±¤¸í' and pro.p_no = 1811001 \r\n" + 
+				"and pro.p_color = 'BK' and pro.p_size = 'XL'";
+		try {
+			if(s_name.equals("S")) {
+				
+			}else if(s_name.equals("M")) {
+				
+			}else if(s_name.equals("L")) {
+				
+			}else if(s_name.equals("XL")) {
+				
+			}
+			pstmt = con.prepareStatement(S_query);
+			rs = pstmt.executeQuery();
+			
+
+			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	
 }

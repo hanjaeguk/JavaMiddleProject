@@ -5,7 +5,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
 import java.awt.Color;
@@ -24,16 +26,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 
 public class ProdInfoModify extends JPanel {
-	private JTextField ProNoTextField;
+	private JTextField ProNoTextField_1;
 	private JTextField OriTextField;
 	private JTextField ChangeTextField;
-	private JTextField ProNoTextField_1;
-	private JTable SizeTable;
+	private JTextField ProNoTextField_2;
 
 	private DBcon myDBcon;
+	private JTextField S_Size_Field;
+	private JTextField M_Size_Field;
+	private JTextField L_Size_Field;
+	private JTextField XL_Size_Field;
 	
 	private void setDBcon(DBcon dbcon) {
 		myDBcon = dbcon;
@@ -57,16 +63,16 @@ public class ProdInfoModify extends JPanel {
 		p1.setLayout(null);
 		p1.setBorder(Tb1);
 
-		JLabel ProNoLabel = new JLabel("Ç°¹ø :");
-		ProNoLabel.setBounds(12, 31, 57, 16);
-		ProNoLabel.setFont(new Font("±¼¸²", Font.BOLD, 13));
-		ProNoLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		p1.add(ProNoLabel);
+		JLabel ProNoLabel_1 = new JLabel("Ç°¹ø :");
+		ProNoLabel_1.setBounds(12, 31, 57, 16);
+		ProNoLabel_1.setFont(new Font("±¼¸²", Font.BOLD, 13));
+		ProNoLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
+		p1.add(ProNoLabel_1);
 
-		ProNoTextField = new JTextField();
-		ProNoTextField.setBounds(59, 27, 109, 26);
-		p1.add(ProNoTextField);
-		ProNoTextField.setColumns(10);
+		ProNoTextField_1 = new JTextField();
+		ProNoTextField_1.setBounds(59, 27, 109, 26);
+		p1.add(ProNoTextField_1);
+		ProNoTextField_1.setColumns(10);
 
 		JLabel OriPriceLabel = new JLabel("±âÁ¸ ÆÇ¸Å´Ü°¡ :");
 		OriPriceLabel.setBounds(12, 57, 100, 36);
@@ -83,9 +89,8 @@ public class ProdInfoModify extends JPanel {
 		SearchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String price = "0";
-				DBcon db = new DBcon();
-				db.SearchPro(ProNoTextField.getText());
-				price = db.getPrice().toString();
+				myDBcon.searchProduct(ProNoTextField_1.getText());
+				price = myDBcon.getPrice().toString();
 				OriTextField.setText(price);
 			}
 
@@ -111,9 +116,8 @@ public class ProdInfoModify extends JPanel {
 
 			public void actionPerformed(ActionEvent arg0) {
 				String c_price =ChangeTextField.getText();
-				String p_no = ProNoTextField.getText();
-				DBcon db = new DBcon();
-				db.UpdatePrice(c_price, p_no);
+				String p_no = ProNoTextField_1.getText();
+				myDBcon.updatePrice(c_price, p_no);
 				
 			}
 		});
@@ -129,156 +133,56 @@ public class ProdInfoModify extends JPanel {
 		p2.setLayout(null);
 		p2.setBorder(Tb2);
 
-		JLabel ShopLabel = new JLabel("¸ÅÀå :");
-		ShopLabel.setBounds(11, 26, 54, 36);
-		ShopLabel.setFont(new Font("±¼¸²", Font.BOLD, 13));
-		p2.add(ShopLabel);
+		JLabel StoreLabel = new JLabel("¸ÅÀå :");
+		StoreLabel.setBounds(11, 26, 54, 36);
+		StoreLabel.setFont(new Font("±¼¸²", Font.BOLD, 13));
+		p2.add(StoreLabel);
 
-		JComboBox ShopComboBox = new JComboBox();
-		ShopComboBox.setBounds(67, 31, 148, 26);
-		ShopComboBox.setFont(new Font("±¼¸²", Font.PLAIN, 13));
-		ShopComboBox.setMaximumRowCount(100);
-		p2.add(ShopComboBox);
+		JComboBox StoreComboBox = new JComboBox();
+		StoreComboBox.setBounds(67, 31, 148, 26);
+		StoreComboBox.setFont(new Font("±¼¸²", Font.PLAIN, 13));
+		StoreComboBox.setMaximumRowCount(100);
+		p2.add(StoreComboBox);
+		myDBcon.getStoreNameCombobox(StoreComboBox);
+		
+		JLabel ProNoLabel_2 = new JLabel("Ç°¹ø :");
+		ProNoLabel_2.setBounds(239, 26, 59, 36);
+		ProNoLabel_2.setFont(new Font("±¼¸²", Font.BOLD, 13));
+		p2.add(ProNoLabel_2);
 
-		try {
-			String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-			String ID = "project1";
-			String PW = "pro1";
-			String sql = null;
-
-			Connection conn = null;
-			Statement stmt = null;
-			ResultSet rs = null;
-
-			try {
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				conn = DriverManager.getConnection(URL, ID, PW);
-				stmt = conn.createStatement();
-				sql = "select distinct sh.s_name from store sh, stock st "
-						+ "where sh.s_code = st.s_code and st.p_qty > 0";
-				rs = stmt.executeQuery(sql);
-				while (rs.next()) {
-					ShopComboBox.addItem(rs.getString(1));
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					stmt.close();
-					conn.close();
-					//rs.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		JLabel ProNoLabel_1 = new JLabel("Ç°¹ø :");
-		ProNoLabel_1.setBounds(239, 26, 59, 36);
-		ProNoLabel_1.setFont(new Font("±¼¸²", Font.BOLD, 13));
-		p2.add(ProNoLabel_1);
-
-		ProNoTextField_1 = new JTextField();
-		ProNoTextField_1.setColumns(10);
-		ProNoTextField_1.setBounds(290, 32, 109, 26);
-		p2.add(ProNoTextField_1);
+		ProNoTextField_2 = new JTextField();
+		ProNoTextField_2.setColumns(10);
+		ProNoTextField_2.setBounds(290, 32, 109, 26);
+		p2.add(ProNoTextField_2);
 		
 		JComboBox ColorComboBox = new JComboBox();
 		ColorComboBox.setBounds(67, 77, 105, 26);
 		p2.add(ColorComboBox);
 		ColorComboBox.setMaximumRowCount(100);
 		ColorComboBox.setFont(new Font("±¼¸²", Font.PLAIN, 13));
+		
+		
 
-		JButton SearchButton_1 = new JButton("Á¶È¸");
-		SearchButton_1.addActionListener(new ActionListener() {
+		JButton SearchButton_2 = new JButton("Á¶È¸");
+		SearchButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ColorComboBox.removeAllItems();
+				String p_no = ProNoTextField_2.getText();
+				myDBcon.searchStock(ColorComboBox, StoreComboBox, p_no);
 
-				try {
-					String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-					String ID = "project1";
-					String PW = "pro1";
-					String sql = null;
-
-					Connection conn = null;
-					Statement stmt = null;
-					ResultSet rs = null;
-
-					try {
-						Class.forName("oracle.jdbc.driver.OracleDriver");
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-
-					try {
-						conn = DriverManager.getConnection(URL, ID, PW);
-						stmt = conn.createStatement();
-						
-						sql = "select distinct pr.p_color from product pr,stock st,shop sh\r\n" + 
-								"Where pr.p_code = st.p_code and\r\n" + 
-								"sh.s_code=st.s_code and\r\n" + 
-								"pr.p_no =" + ProNoTextField_1.getText() +
-								"and sh.s_name ='"+ShopComboBox.getSelectedItem()+"'";
-
-						rs = stmt.executeQuery(sql);
-						
-						while(rs.next()) {
-							ColorComboBox.addItem(rs.getString(1));
-						}
-
-						
-						
-					} catch (SQLException e) {
-						e.printStackTrace();
-					} finally {
-						try {
-							stmt.close();
-							conn.close();
-							rs.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 		});
 		
 
 		
-		
-		SearchButton_1.setFont(new Font("±¼¸²", Font.PLAIN, 12));
-		SearchButton_1.setBounds(411, 32, 70, 25);
-		p2.add(SearchButton_1);
+		SearchButton_2.setFont(new Font("±¼¸²", Font.PLAIN, 12));
+		SearchButton_2.setBounds(411, 32, 70, 25);
+		p2.add(SearchButton_2);
 
 		JLabel ColorLabel = new JLabel("»ö»ó :");
 		ColorLabel.setBounds(11, 72, 54, 36);
 		p2.add(ColorLabel);
 		ColorLabel.setFont(new Font("±¼¸²", Font.BOLD, 13));
-
-		
-
-		JScrollPane SizeScrollPane = new JScrollPane();
-		SizeScrollPane.setBounds(67, 113, 373, 63);
-		p2.add(SizeScrollPane);
-		
-		SizeTable = new JTable();
-		SizeScrollPane.setViewportView(SizeTable);
-		SizeTable.setFont(new Font("±¼¸²", Font.PLAIN, 13));
-		SizeTable.setModel(new DefaultTableModel(new Object[][] { { }, },
-				new String[] { "S", "M", "L", "XL" }));
-
-		SizeTable.setRowHeight(35);
 
 
 		JLabel SizeLabel = new JLabel("»çÀÌÁî :");
@@ -286,11 +190,68 @@ public class ProdInfoModify extends JPanel {
 		p2.add(SizeLabel);
 		SizeLabel.setFont(new Font("±¼¸²", Font.BOLD, 13));
 
+
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(67, 118, 359, 65);
+		p2.add(panel);
+		panel.setLayout(new GridLayout(0, 4, 0, 0));
+		
+		JLabel S_Size_Label = new JLabel("S");
+		S_Size_Label.setHorizontalAlignment(SwingConstants.CENTER);
+		S_Size_Label.setBackground(Color.LIGHT_GRAY);
+		panel.add(S_Size_Label);
+		S_Size_Label.setOpaque(true);
+//		Border border =BorderFactory.createLineBorder(Color.BLACK); // ¶óº§ Å×µÎ¸®
+		S_Size_Label.setBorder(new MatteBorder(1, 1, 1, 0, Color.BLACK));  // ¿øÇÏ´Â À§Ä¡¿¡ ¶óº§ Å×µÎ¸®
+		
+		JLabel M_Size_Label = new JLabel("M");
+		M_Size_Label.setHorizontalAlignment(SwingConstants.CENTER);
+		M_Size_Label.setBackground(Color.LIGHT_GRAY);
+		panel.add(M_Size_Label);
+		M_Size_Label.setOpaque(true);
+		M_Size_Label.setBorder(new MatteBorder(1, 1, 1, 0, Color.BLACK)); 
+
+
+		JLabel L_Size_Label = new JLabel("L");
+		L_Size_Label.setHorizontalAlignment(SwingConstants.CENTER);
+		L_Size_Label.setBackground(Color.LIGHT_GRAY);
+		panel.add(L_Size_Label);
+		L_Size_Label.setOpaque(true);
+		L_Size_Label.setBorder(new MatteBorder(1, 1, 1, 0, Color.BLACK)); 
+
+
+		JLabel XL_Size_Label = new JLabel("XL");
+		XL_Size_Label.setHorizontalAlignment(SwingConstants.CENTER);
+		XL_Size_Label.setBackground(Color.LIGHT_GRAY);
+		panel.add(XL_Size_Label);
+		XL_Size_Label.setOpaque(true);
+		XL_Size_Label.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK)); 
+		
+		
+		S_Size_Field = new JTextField();
+		panel.add(S_Size_Field);
+		S_Size_Field.setColumns(10);
+		
+		M_Size_Field = new JTextField();
+		panel.add(M_Size_Field);
+		M_Size_Field.setColumns(10);
+		
+		L_Size_Field = new JTextField();
+		panel.add(L_Size_Field);
+		L_Size_Field.setColumns(10);
+		
+		XL_Size_Field = new JTextField();
+		panel.add(XL_Size_Field);
+		XL_Size_Field.setColumns(10);
+		
+		
 		JButton button = new JButton("È®ÀÎ");
 		button.setBounds(452, 118, 70, 36);
 		p2.add(button);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 			}
 		});
 		button.setFont(new Font("±¼¸²", Font.PLAIN, 12));

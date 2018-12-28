@@ -103,7 +103,7 @@ public class NewProReg extends JPanel {
 				String p_size = size_field.getText();
 				String p_price = price_field.getText();
 				
-				myDBcon.Insertpro(p_code, p_no, p_color, p_size, p_price);				
+				myDBcon.insertProduct(p_code, p_no, p_color, p_size, p_price);				
 			}
 		});
 	}
