@@ -161,6 +161,8 @@ public class ProdInfoModify extends JPanel {
 		ColorComboBox.setMaximumRowCount(100);
 		ColorComboBox.setFont(new Font("굴림", Font.PLAIN, 13));
 		
+
+		
 		
 
 		JButton SearchButton_2 = new JButton("조회");
@@ -244,6 +246,24 @@ public class ProdInfoModify extends JPanel {
 		XL_Size_Field = new JTextField();
 		panel.add(XL_Size_Field);
 		XL_Size_Field.setColumns(10);
+		
+		ColorComboBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s_name = (String) StoreComboBox.getSelectedItem();
+				String p_no = ProNoTextField_2.getText();
+				String p_color = (String) ColorComboBox.getSelectedItem();
+				String size = "S";
+				String qty = "0";
+				
+				myDBcon.searchSize(s_name, p_no, p_color, size);
+				qty = myDBcon.getQty().toString();
+				S_Size_Field.setText(qty);
+				
+			}
+			
+		});
 		
 		
 		JButton button = new JButton("확인");

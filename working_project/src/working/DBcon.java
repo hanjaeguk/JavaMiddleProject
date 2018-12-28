@@ -336,11 +336,12 @@ public class DBcon {
 		}
 	}
 	
-	public void searchSize(String s_name,String p_no,String p_color) {
-		String S_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
+	public void searchSize(String s_name,String p_no,String p_color,String size) {
+		String query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
 				"Where pro.p_code = sc.p_code and\r\n" + 
-				"sr.s_code=sc.s_code and sr.s_name = '´ºÄÚ¾Æ±¤¸í' and pro.p_no = 1811001 \r\n" + 
-				"and pro.p_color = 'BK' and pro.p_size = 'S'";
+				"sr.s_code=sc.s_code and sr.s_name = '" +s_name+ "'and pro.p_no ="+ 
+				 p_no +"and pro.p_color = '"+p_color+ "' and pro.p_size = '"+ size+ "'";
+		
 		String M_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
 				"Where pro.p_code = sc.p_code and\r\n" + 
 				"sr.s_code=sc.s_code and sr.s_name = '´ºÄÚ¾Æ±¤¸í' and pro.p_no = 1811001 \r\n" + 
@@ -354,18 +355,14 @@ public class DBcon {
 				"sr.s_code=sc.s_code and sr.s_name = '´ºÄÚ¾Æ±¤¸í' and pro.p_no = 1811001 \r\n" + 
 				"and pro.p_color = 'BK' and pro.p_size = 'XL'";
 		try {
-			if(s_name.equals("S")) {
-				
-			}else if(s_name.equals("M")) {
-				
-			}else if(s_name.equals("L")) {
-				
-			}else if(s_name.equals("XL")) {
-				
-			}
-			pstmt = con.prepareStatement(S_query);
+			
+			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
 			
+			while(rs.next()) {
+				int qt = rs.getInt(1);
+				this.qty = qt;
+			}
 
 			
 
