@@ -140,6 +140,7 @@ public class DBcon {
 	public Integer getPrice() {
 		return price; // 해당 품번 판매단가 반환
 	}
+	
 
 	// SalesReg - 상품 전체의 컬러 combobox list에 추가
 	public void combo_color(JComboBox<String> combo) {
@@ -255,6 +256,7 @@ public class DBcon {
 		}
 	}
 	
+	
 	public void insertProduct(String p_code, String p_no, String p_color, String p_size, String p_price) {
 
 		String query = "INSERT INTO PRODUCT VALUES(UPPER('" + p_code + "')," + p_no + ",UPPER('" + p_color
@@ -317,12 +319,13 @@ public class DBcon {
 		}
 	}
 	
-	public void searchStock(JComboBox colorComboBox,JComboBox getStoreComboBox,String p_no) {
+	public void searchStockColor(JComboBox colorComboBox,JComboBox getStoreComboBox,String p_no) {
 		String query = "select distinct pro.p_color from product pro,stock sc,store sr\r\n" + 
 				"Where pro.p_code = sc.p_code and\r\n" + 
 				"sr.s_code = sc.s_code and\r\n" + 
 				"pro.p_no ="+p_no+ "\r\n"+
 				"and sr.s_name ='"+getStoreComboBox.getSelectedItem()+"'";
+
 		try {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
@@ -342,18 +345,6 @@ public class DBcon {
 				"sr.s_code=sc.s_code and sr.s_name = '" +s_name+ "'and pro.p_no ="+ 
 				 p_no +"and pro.p_color = '"+p_color+ "' and pro.p_size = '"+ size+ "'";
 		
-		String M_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
-				"Where pro.p_code = sc.p_code and\r\n" + 
-				"sr.s_code=sc.s_code and sr.s_name = '뉴코아광명' and pro.p_no = 1811001 \r\n" + 
-				"and pro.p_color = 'BK' and pro.p_size = 'M'";
-		String L_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
-				"Where pro.p_code = sc.p_code and\r\n" + 
-				"sr.s_code=sc.s_code and sr.s_name = '뉴코아광명' and pro.p_no = 1811001 \r\n" + 
-				"and pro.p_color = 'BK' and pro.p_size = 'L'";
-		String XL_query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
-				"Where pro.p_code = sc.p_code and\r\n" + 
-				"sr.s_code=sc.s_code and sr.s_name = '뉴코아광명' and pro.p_no = 1811001 \r\n" + 
-				"and pro.p_color = 'BK' and pro.p_size = 'XL'";
 		try {
 			
 			pstmt = con.prepareStatement(query);
@@ -364,12 +355,29 @@ public class DBcon {
 				this.qty = qt;
 			}
 
-			
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void updateStock(String c_stock,String s_name,String p_no,String p_color,String p_size) {
+		String query = "update stock\r\n" + 
+				"set p_qty = "+c_stock+"\r\n" + 
+				"where p_code in(select sc.p_code from stock sc, store sr, product pro where sc.s_code = sr.s_code and sc.p_code = pro.p_code\r\n" + 
+				"and sr.s_name = '"+s_name+"' and pro.p_no = "+p_no+" and pro.p_color = '"+p_color+"' and pro.p_size = '"+p_size+"') and\r\n" + 
+				"s_code in(select sc.s_code from stock sc, store sr, product pro where sc.s_code = sr.s_code and sc.p_code = pro.p_code\r\n" + 
+				"and sr.s_name = '"+s_name+"' and pro.p_no ="+p_no+" and pro.p_color = '"+p_color+"' and pro.p_size = '"+p_size+"')";
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			JOptionPane.showMessageDialog(null, "입력되었습니다.");
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

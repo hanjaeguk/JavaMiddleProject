@@ -19,6 +19,8 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -162,29 +164,54 @@ public class ProdInfoModify extends JPanel {
 		ColorComboBox.setFont(new Font("±º∏≤", Font.PLAIN, 13));
 		
 
-		
-		
-
-		JButton SearchButton_2 = new JButton("¡∂»∏");
-		SearchButton_2.addActionListener(new ActionListener() {
+		JButton SearchColorBtn = new JButton("ªˆªÛ ¡∂»∏");
+		SearchColorBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ColorComboBox.removeAllItems();
+				S_Size_Field.setText(null);
+				M_Size_Field.setText(null);
+				L_Size_Field.setText(null);
+				XL_Size_Field.setText(null);
 				String p_no = ProNoTextField_2.getText();
-				myDBcon.searchStock(ColorComboBox, StoreComboBox, p_no);
-
+				myDBcon.searchStockColor(ColorComboBox, StoreComboBox, p_no);
 			}
 		});
-		
-
-		
-		SearchButton_2.setFont(new Font("±º∏≤", Font.PLAIN, 12));
-		SearchButton_2.setBounds(411, 32, 70, 25);
-		p2.add(SearchButton_2);
+		SearchColorBtn.setFont(new Font("±º∏≤", Font.PLAIN, 12));
+		SearchColorBtn.setBounds(411, 32, 111, 25);
+		p2.add(SearchColorBtn);
 
 		JLabel ColorLabel = new JLabel("ªˆªÛ :");
 		ColorLabel.setBounds(11, 72, 54, 36);
 		p2.add(ColorLabel);
 		ColorLabel.setFont(new Font("±º∏≤", Font.BOLD, 13));
+	
+		JButton SearchSizeBtn = new JButton("¿Á∞Ì ¡∂»∏");
+		SearchSizeBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String qty = "0";
+				myDBcon.searchSize(StoreComboBox.getSelectedItem().toString(), ProNoTextField_2.getText(), ColorComboBox.getSelectedItem().toString(), "S");
+				qty = myDBcon.getQty().toString();
+				S_Size_Field.setText(qty);
+				
+				myDBcon.searchSize(StoreComboBox.getSelectedItem().toString(), ProNoTextField_2.getText(), ColorComboBox.getSelectedItem().toString(), "M");
+				qty = myDBcon.getQty().toString();
+				M_Size_Field.setText(qty);
+				
+				myDBcon.searchSize(StoreComboBox.getSelectedItem().toString(), ProNoTextField_2.getText(), ColorComboBox.getSelectedItem().toString(), "L");
+				qty = myDBcon.getQty().toString();
+				L_Size_Field.setText(qty);
+				
+				myDBcon.searchSize(StoreComboBox.getSelectedItem().toString(), ProNoTextField_2.getText(), ColorComboBox.getSelectedItem().toString(), "XL");
+				qty = myDBcon.getQty().toString();
+				XL_Size_Field.setText(qty);
+				
+
+				
+			}
+		});
+		SearchSizeBtn.setFont(new Font("±º∏≤", Font.PLAIN, 12));
+		SearchSizeBtn.setBounds(196, 79, 102, 25);
+		p2.add(SearchSizeBtn);
 
 
 		JLabel SizeLabel = new JLabel("ªÁ¿Ã¡Ó :");
@@ -247,34 +274,25 @@ public class ProdInfoModify extends JPanel {
 		panel.add(XL_Size_Field);
 		XL_Size_Field.setColumns(10);
 		
-		ColorComboBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String s_name = (String) StoreComboBox.getSelectedItem();
-				String p_no = ProNoTextField_2.getText();
-				String p_color = (String) ColorComboBox.getSelectedItem();
-				String size = "S";
-				String qty = "0";
-				
-				myDBcon.searchSize(s_name, p_no, p_color, size);
-				qty = myDBcon.getQty().toString();
-				S_Size_Field.setText(qty);
-				
-			}
-			
-		});
 		
-		
-		JButton button = new JButton("»Æ¿Œ");
-		button.setBounds(452, 118, 70, 36);
-		p2.add(button);
-		button.addActionListener(new ActionListener() {
+		JButton UpdateStockBtn = new JButton("»Æ¿Œ");
+		UpdateStockBtn.setBounds(452, 118, 70, 36);
+		p2.add(UpdateStockBtn);
+		UpdateStockBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
+				String c_stock = S_Size_Field.getText();
+				String s_name = StoreComboBox.getSelectedItem().toString();
+				String p_no = ProNoTextField_2.getText();
+				String p_color = ColorComboBox.getSelectedItem().toString();
+				
+				myDBcon.updateStock(c_stock, s_name, p_no, p_color, "S");
+				
 			}
 		});
-		button.setFont(new Font("±º∏≤", Font.PLAIN, 12));
+		UpdateStockBtn.setFont(new Font("±º∏≤", Font.PLAIN, 12));
+		
+
 
 	}
 }
