@@ -1,4 +1,5 @@
 package working;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ public class DBcon {
 	String no, color, size; // stock_select, getPrice
 	String user; // login
 	String code;
+	String p_code;
 	int logCnt; // login
 	int price, qty; // pro_select
 	int groupInt;
@@ -140,7 +142,6 @@ public class DBcon {
 	public Integer getPrice() {
 		return price; // 해당 품번 판매단가 반환
 	}
-	
 
 	// SalesReg - 상품 전체의 컬러 combobox list에 추가
 	public void combo_color(JComboBox<String> combo) {
@@ -186,7 +187,7 @@ public class DBcon {
 	}
 
 	public Integer getQty() {
-		return qty; 
+		return qty;
 	}
 
 	// SalesReg - 상품 등록 //////////////수정쓰~//////
@@ -199,7 +200,7 @@ public class DBcon {
 			this.groupInt = 2;
 		}
 
-		//String query = "";
+		// String query = "";
 		// insert into SAL_TABLE
 		// values(statusCnt,currDate,user,this.group,code,s_qty,s_price);
 
@@ -209,11 +210,14 @@ public class DBcon {
 
 			// insert
 			// 테이블 없으면 테이블 생성 후 insert
-			
+
 			// select 문 메소드 따로 만들까..?
-			int cnt=1;
-			String query = "select sa_group, p_code, sa_qty, sa_price from SAL_S1101201812 order by sa_no"; // jtable에 뿌려줄 내용 select 문
-			//SAL_S1101201812 : SAL_ 매장코드<user> 연도<currDate.getYear()> 월<currDate.getMonthValue()>
+			int cnt = 1;
+			String query = "select sa_group, p_code, sa_qty, sa_price from SAL_S1101201812 order by sa_no"; // jtable에
+																											// 뿌려줄 내용
+																											// select 문
+			// SAL_S1101201812 : SAL_ 매장코드<user> 연도<currDate.getYear()>
+			// 월<currDate.getMonthValue()>
 			// where sa_date=currDate
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
@@ -222,20 +226,21 @@ public class DBcon {
 				String code = rs.getString(2);
 				String qty = rs.getString(3);
 				String priceStr = rs.getString(4);
-				
+
 				String groupStr;
-				if(groupInt == 1) {
+				if (groupInt == 1) {
 					groupStr = "판매";
 				} else {
 					groupStr = "반품";
 				}
 				this.no = code.substring(0, 7);
-				this.color = code.substring(7,9);
+				this.color = code.substring(7, 9);
 				this.size = code.substring(9);
-				
-				System.out.println(groupStr+" "+no+" "+color+" "+size+" "+price+" "+qty+" "+priceStr);
 
-				Object data[] = { cnt ,groupStr, no, color, size, price, qty, priceStr};
+				System.out.println(
+						groupStr + " " + no + " " + color + " " + size + " " + price + " " + qty + " " + priceStr);
+
+				Object data[] = { cnt, groupStr, no, color, size, price, qty, priceStr };
 				DefaultTableModel model = (DefaultTableModel) table.getModel();
 				model.addRow(data);
 				cnt++;
@@ -255,8 +260,7 @@ public class DBcon {
 			model.removeRow(0);
 		}
 	}
-	
-	
+
 	public void insertProduct(String p_code, String p_no, String p_color, String p_size, String p_price) {
 
 		String query = "INSERT INTO PRODUCT VALUES(UPPER('" + p_code + "')," + p_no + ",UPPER('" + p_color
@@ -264,18 +268,17 @@ public class DBcon {
 		try {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
-			
+
 			JOptionPane.showMessageDialog(null, "입력되었습니다.");
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "입력오류.");
-		} 
+		}
 	}
-	
+
 	public void searchProduct(String p_no) {
-		String query = "SELECT DISTINCT P_PRICE FROM PRODUCT WHERE P_NO ="+
-						p_no;
+		String query = "SELECT DISTINCT P_PRICE FROM PRODUCT WHERE P_NO =" + p_no;
 		try {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
@@ -283,76 +286,79 @@ public class DBcon {
 				int str = rs.getInt(1);
 				this.price = str;
 			}
-		
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void updatePrice(String c_price,String p_no) {
-		String query = "UPDATE PRODUCT SET P_PRICE = " + c_price + "WHERE P_NO = "
-						+ p_no;
-		
+
+	public void updatePrice(String c_price, String p_no) {
+		String query = "UPDATE PRODUCT SET P_PRICE = " + c_price + "WHERE P_NO = " + p_no;
+
 		try {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
 			JOptionPane.showMessageDialog(null, "변경되었습니다.");
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void getStoreNameCombobox(JComboBox storeComboBox) {
 		String query = "select distinct sr.s_name from store sr, stock sc "
 				+ "where sr.s_code = sc.s_code and sc.p_qty > 0";
 		try {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				storeComboBox.addItem(rs.getString(1));
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void searchStockColor(JComboBox colorComboBox,JComboBox getStoreComboBox,String p_no) {
-		String query = "select distinct pro.p_color from product pro,stock sc,store sr\r\n" + 
-				"Where pro.p_code = sc.p_code and\r\n" + 
-				"sr.s_code = sc.s_code and\r\n" + 
-				"pro.p_no ="+p_no+ "\r\n"+
-				"and sr.s_name ='"+getStoreComboBox.getSelectedItem()+"'";
+
+	public void searchStockColor(JComboBox colorComboBox, JComboBox getStoreComboBox, String p_no) {
+		String query = "select distinct pro.p_color from product pro,stock sc,store sr\r\n"
+				+ "Where pro.p_code = sc.p_code and\r\n" + "sr.s_code = sc.s_code and\r\n" + "pro.p_no =" + p_no
+				+ "\r\n" + "and sr.s_name ='" + getStoreComboBox.getSelectedItem() + "'";
 
 		try {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				colorComboBox.addItem(rs.getString(1));
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void searchSize(String s_name,String p_no,String p_color,String size) {
-		String query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + 
-				"Where pro.p_code = sc.p_code and\r\n" + 
-				"sr.s_code=sc.s_code and sr.s_name = '" +s_name+ "'and pro.p_no ="+ 
-				 p_no +"and pro.p_color = '"+p_color+ "' and pro.p_size = '"+ size+ "'";
-		
+
+	public void searchSize(String s_name, String p_no, String p_color, String size) {
+		String query = "select sc.p_qty from product pro,stock sc,store sr\r\n" + "Where pro.p_code = sc.p_code and\r\n"
+				+ "sr.s_code=sc.s_code and sr.s_name = '" + s_name + "'and pro.p_no =" + p_no + "and pro.p_color = '"
+				+ p_color + "' and pro.p_size = '" + size + "'";
+
 		try {
-			
+
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+//			while(rs.next()) {
+//				int qt = rs.getInt(1);
+//				this.qty = qt;
+//			}
+
+			if (rs.next()) {
 				int qt = rs.getInt(1);
 				this.qty = qt;
+			} else {
+				this.qty = 0;
 			}
 
 		} catch (SQLException e) {
@@ -360,25 +366,39 @@ public class DBcon {
 		}
 
 	}
-	
-	public void updateStock(String c_stock,String s_name,String p_no,String p_color,String p_size) {
-		String query = "update stock\r\n" + 
-				"set p_qty = "+c_stock+"\r\n" + 
-				"where p_code in(select sc.p_code from stock sc, store sr, product pro where sc.s_code = sr.s_code and sc.p_code = pro.p_code\r\n" + 
-				"and sr.s_name = '"+s_name+"' and pro.p_no = "+p_no+" and pro.p_color = '"+p_color+"' and pro.p_size = '"+p_size+"') and\r\n" + 
-				"s_code in(select sc.s_code from stock sc, store sr, product pro where sc.s_code = sr.s_code and sc.p_code = pro.p_code\r\n" + 
-				"and sr.s_name = '"+s_name+"' and pro.p_no ="+p_no+" and pro.p_color = '"+p_color+"' and pro.p_size = '"+p_size+"')";
-		
-		try {
-			pstmt = con.prepareStatement(query);
-			rs = pstmt.executeQuery();
-			JOptionPane.showMessageDialog(null, "입력되었습니다.");
 
+	public void updateStock(String c_stock, String s_name, String p_no, String p_color, String p_size) {
+		String query = "update stock\r\n" + "set p_qty = " + c_stock + "\r\n"
+				+ "where p_code in(select sc.p_code from stock sc, store sr, product pro where sc.s_code = sr.s_code and sc.p_code = pro.p_code\r\n"
+				+ "and sr.s_name = '" + s_name + "' and pro.p_no = " + p_no + " and pro.p_color = '" + p_color
+				+ "' and pro.p_size = '" + p_size + "') and\r\n"
+				+ "s_code in(select sc.s_code from stock sc, store sr, product pro where sc.s_code = sr.s_code and sc.p_code = pro.p_code\r\n"
+				+ "and sr.s_name = '" + s_name + "' and pro.p_no =" + p_no + " and pro.p_color = '" + p_color
+				+ "' and pro.p_size = '" + p_size + "')";
+		
+		String query1 = "select p_code from product \r\n" + 
+				"where p_no = "+p_no+" and p_color = '"+p_color+"' \r\n" + 
+				"and p_size = '"+p_size+"'";
+
+		try {
+			PreparedStatement pstmt1 = null;
+			ResultSet rs1 = null;
+			pstmt1 = con.prepareStatement(query1);
+			rs1 = pstmt1.executeQuery();
 			
+			if(rs1.next()) {
+				pstmt = con.prepareStatement(query);
+				rs = pstmt.executeQuery();
+				JOptionPane.showMessageDialog(null, p_size+"수정되었습니다.");				
+			}else {
+				JOptionPane.showMessageDialog(null, p_size+"사이즈 상품등록이 필요합니다.");
+			}
+			
+			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 }
