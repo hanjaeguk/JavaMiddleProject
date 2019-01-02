@@ -186,7 +186,7 @@ public class DBcon {
 	}
 
 	public Integer getQty() {
-		return qty; // 해당 품번 판매단가 반환
+		return qty; 
 	}
 
 	// SalesReg - 상품 등록 //////////////수정쓰~//////
