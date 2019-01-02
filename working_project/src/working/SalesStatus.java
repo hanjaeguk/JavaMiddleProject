@@ -82,7 +82,7 @@ public class SalesStatus extends JPanel implements ActionListener{
 			}
 		};
 		firstTab = new JTable(firstTabModel);
-		firstTab.getTableHeader().setReorderingAllowed(false); // 열 이동 불가
+		firstTab.getTableHeader().setReorderingAllowed(false); // 테이블 열 고정
 		firstSc = new JScrollPane(firstTab);
 		add(firstSc);
 

@@ -36,13 +36,13 @@ public class SalesReg extends JPanel implements ActionListener{
 	LocalDate currDate = LocalDate.now();
 	
 	String code = null;
+	int totalPrice = 0;
 	/*
 	 * currDate.getYear() 년
 	 * currDate.getMonthValue() 월
 	 * currDate.getDayOfMonth() 일
 	 * currDate.getDayOfWeek() 요일
 	 */
-
 	private void setDBcon(DBcon dbcon) {
 		myDBcon = dbcon;
 	}
@@ -65,13 +65,14 @@ public class SalesReg extends JPanel implements ActionListener{
 		// 2
 			//* 총판매금액 - 실판매금액 총액 계산
 		String firstTabName[] = { "판매일자", "총판매금액" };
-		Object firstData[][] = { { currDate, "20,000" } };
+		Object firstData[][] = { { currDate, totalPrice } };
 		firstTabModel = new DefaultTableModel(firstData, firstTabName){
 			public boolean isCellEditable(int row, int col) {
 				return false; // 테이블 수정 못하게
 			}
 		};
 		firstTab = new JTable(firstTabModel);
+		firstTab.getTableHeader().setReorderingAllowed(false); // 테이블 열 고정
 		firstSc = new JScrollPane(firstTab);
 		firstSc.setPreferredSize(new Dimension(450, 80));
 		add(firstSc);
@@ -133,9 +134,6 @@ public class SalesReg extends JPanel implements ActionListener{
 				
 		// 4 - 클릭해서 삭제	
 		String secTabName[] = { "번호", "구분", "품번", "색상", "사이즈", "판매단가", "수량", "실판매금액"};
-//		Object secData[][] = { { "판매", "1", "BK", "S", "5000", "1", "5000" },
-//				{ "반품", "2", "WH", "M", "7000", "1", "7000" },
-//				{ "판매", "3", "BK", "L", "6000", "1", "6000" } };
 		Object secData[][] = new Object[0][8];
 		secTabModel = new DefaultTableModel(secData, secTabName){
 			public boolean isCellEditable(int row, int col) {
@@ -143,8 +141,12 @@ public class SalesReg extends JPanel implements ActionListener{
 			}
 		};
 		secTab = new JTable(secTabModel);
+		secTab.getTableHeader().setReorderingAllowed(false); // 테이블 열 고정
 		secSc = new JScrollPane(secTab);
-		add(secSc);
+		add(secSc);		
+		dbcon.salesStatusSearch(secTab);
+		totalPrice = dbcon.getTotalPrice();
+		System.out.println(totalPrice);
 		
 		JPanel p3 = new JPanel();
 		add(p3);		
@@ -189,15 +191,12 @@ public class SalesReg extends JPanel implements ActionListener{
 		}
 		
 		if (e.getSource() == btnReg) {			//등록
-			//테이블에 내역 추가	
 			myDBcon.clear(secTab);
-			myDBcon.pro_reg(secTab,group,s_qty,s_price);			
+			myDBcon.pro_reg(secTab,group,s_qty,s_price);
 		}	
 		if (e.getSource() == btnDelete) {			//삭제
 			//선택한 테이블 행 삭제
 			//선택한 테이블 데이터 넘기기
 		}
-		
-		
 	}
 }
