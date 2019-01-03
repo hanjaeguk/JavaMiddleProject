@@ -2,6 +2,7 @@ package working;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -18,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-public class AccountLookupCreate extends JPanel {
+public class AccountLookupCreate extends JPanel implements ActionListener {
 	private JTable table_1;
 
 	private DBcon myDBcon;
@@ -28,6 +29,10 @@ public class AccountLookupCreate extends JPanel {
 	private JTextField name_Field;
 	private JTextField phone_Field;
 	private JTextField manage_Field;
+	private JButton btnNewButton;
+	private JRadioButton[] rdbtn = new JRadioButton[2];
+	String[] radioText = { "매장", "본사" };
+	String radio = "매장";
 	
 	private void setDBcon(DBcon dbcon) {
 		myDBcon = dbcon;
@@ -43,51 +48,31 @@ public class AccountLookupCreate extends JPanel {
 		add(lblNewLabel);
 		
 		JPanel p2 = new JPanel();
-		p2.setBounds(337, 17, 183, 32);
+		p2.setBounds(328, 17, 183, 32);
 		add(p2);
+		
 		ButtonGroup grp1 = new ButtonGroup();
-		JRadioButton[] rb1 = new JRadioButton[2];
-		
-		rb1[0] = new JRadioButton("본사");
-		rb1[1] = new JRadioButton("매장");
-	
-		
+		for (int i = 0; i < rdbtn.length; i++) {
+			rdbtn[i] = new JRadioButton(radioText[i]);
+			grp1.add(rdbtn[i]);
+			p2.add(rdbtn[i]);
+			rdbtn[i].addActionListener(this);
 
-		for(JRadioButton jb1 : rb1) {
-			grp1.add(jb1);
-			p2.add(jb1);
 		}
+		rdbtn[0].setSelected(true); 
+	
+
+
 	
 		p2.setVisible(true);
 		
-		JButton btnNewButton = new JButton("생성");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String id = id_Field.getText();
-				String pw = pw_Field.getText();
-				String storeName = storeName_Field.getText();
-				String personName = name_Field.getText();
-				String phone = phone_Field.getText();
-				String manage = manage_Field.getText();
-				String radio = null;
-
-
-				if (rb1[0].getText() == "매장") {
-					radio="매장";
-					myDBcon.createAccount
-					(id, pw, personName, phone, "2", storeName, id, manage, radio);
-										
-				}else if (rb1[1].getText() == "본사"){
-					
-				}
-				
-			}
-		});
+		btnNewButton = new JButton("생성");
+		btnNewButton.addActionListener(this);
 		btnNewButton.setBounds(518, 17, 70, 25);
 		add(btnNewButton);
 		
 		JPanel p1 = new JPanel();
-		p1.setBounds(12, 59, 576, 84);
+		p1.setBounds(0, 59, 600, 84);
 		add(p1);
 		p1.setLayout(new GridLayout(0, 6, 0, 0));
 		
@@ -111,7 +96,7 @@ public class AccountLookupCreate extends JPanel {
 		phoneLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		p1.add(phoneLabel);
 		
-		JLabel manageLabel = new JLabel("담당자 ID *");
+		JLabel manageLabel = new JLabel("담당자 ID(매장)*");
 		manageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		p1.add(manageLabel);
 		
@@ -177,7 +162,7 @@ public class AccountLookupCreate extends JPanel {
 		table_1.setRowHeight(30);
 		
 		JPanel p3 = new JPanel();
-		p3.setBounds(230, 163, 278, 32);
+		p3.setBounds(229, 153, 278, 32);
 		add(p3);
 		ButtonGroup grp2 = new ButtonGroup();
 		JRadioButton[] rb2 = new JRadioButton[3];
@@ -202,7 +187,7 @@ public class AccountLookupCreate extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		button.setBounds(518, 163, 70, 25);
+		button.setBounds(518, 159, 70, 25);
 		add(button);
 		
 
@@ -211,4 +196,37 @@ public class AccountLookupCreate extends JPanel {
 		table_1.getColumnModel().getColumn(1).setPreferredWidth(50);
 		table_1.getColumnModel().getColumn(3).setPreferredWidth(50);
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String es = e.getActionCommand();
+		if (es.equals(rdbtn[0].getText())) {
+			this.radio = es;
+			manage_Field.setEditable(true);
+		}else if (es.equals(rdbtn[1].getText())){
+			this.radio = es;
+			manage_Field.setText(null);
+			manage_Field.setEditable(false);
+		}
+		
+		if(e.getSource() == btnNewButton) {
+			String id = id_Field.getText();
+			String pw = pw_Field.getText();
+			String personName = name_Field.getText();
+			String phone = phone_Field.getText();
+			String storeName = storeName_Field.getText();
+			String manage = manage_Field.getText();
+			
+			if(radio.equals("본사")) {
+				myDBcon.createAccount(id, pw, personName, phone, "1", storeName, manage, radio);				
+			}else {
+				myDBcon.createAccount(id, pw, personName, phone, "2", storeName, manage, radio);
+			}
+			
+		}
+		
+
+	}
+
+
 }

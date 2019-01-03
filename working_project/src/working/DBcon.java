@@ -78,7 +78,7 @@ public class DBcon {
 
 			while (rs.next()) {
 				if (id.equals(rs.getString(1)) && pw.equals(rs.getString(2))) {
-					this.logCnt = 1; 
+					this.logCnt = 1;
 
 					query = "select s_code from store where m_id='" + id + "'";
 					pstmt = con.prepareStatement(query);
@@ -101,14 +101,13 @@ public class DBcon {
 	}
 
 	public Integer getLogCnt() {
-		return logCnt;	 // 로그인 성공 여부 반환
-	}
-	public String getUser() {
-		return user; 	// 로그인 유저 반환
+		return logCnt; // 로그인 성공 여부 반환
 	}
 
-	
-	
+	public String getUser() {
+		return user; // 로그인 유저 반환
+	}
+
 	// 재고조회 - 전체 매장 재고 조회
 	public void searchStock(JTable table, String no) {
 		this.table = table;
@@ -168,12 +167,10 @@ public class DBcon {
 	// 판매등록 - 판매현황 테이블
 	public void salesStatusSearch(JTable table) {
 		this.table = table;
-		
-		String query = "select sa_no, sa_group, sales.p_code, p_price, sa_qty, sa_price\r\n" + 
-				"from sales, product\r\n" + 
-				"where sales.p_code = product.p_code\r\n" + 
-				"and sa_date = '18/11/01' and s_code = '"+ user +"' \r\n" + 
-				"order by sa_no"; 
+
+		String query = "select sa_no, sa_group, sales.p_code, p_price, sa_qty, sa_price\r\n" + "from sales, product\r\n"
+				+ "where sales.p_code = product.p_code\r\n" + "and sa_date = '18/11/01' and s_code = '" + user
+				+ "' \r\n" + "order by sa_no";
 
 		try {
 			pstmt = con.prepareStatement(query);
@@ -208,10 +205,11 @@ public class DBcon {
 			e.printStackTrace();
 		}
 	}
+
 	public Integer getTotalPrice() {
 		return totalPrice; // 총판매금액
 	}
-	
+
 	// 판매등록 - 조회
 	public void pro_select(String no, String color, String size) {
 		String query = "select p_price, p_qty, product.p_code from product, stock\r\n"
@@ -240,30 +238,30 @@ public class DBcon {
 	public Integer getQty() {
 		return qty; // 해당 품번 수량 반환
 	}
-	
+
 	// 판매등록 - 등록
-	// +) insert 
+	// +) insert
 	public void pro_reg(JTable table, String group, String s_qty, String s_price) {
 		this.table = table;
 		if (group.equals("판매")) {
 			this.groupInt = 1;
 		} else {
 			this.groupInt = 2;
-			s_price = "-"+s_price;
+			s_price = "-" + s_price;
 		}
-		this.code = no + color + size ;
-		
+		this.code = no + color + size;
+
 		System.out.println(groupInt);
-		
+
 //		String query = "insert into sales values('"+ "181101"+user+"088" +"',sa_no_seq3.nextval,\r\n" + 
-		String query = "insert into sales values('"+ "181101"+user+"089" +"',\r\n" + 
-				"to_date('2018-11-01','yyyy-mm-dd'),\r\n" + "89" +
-				",'"+ user +"',"+ groupInt +",'"+ code +"',"+s_qty+","+s_price+")";
+		String query = "insert into sales values('" + "181101" + user + "089" + "',\r\n"
+				+ "to_date('2018-11-01','yyyy-mm-dd'),\r\n" + "89" + ",'" + user + "'," + groupInt + ",'" + code + "',"
+				+ s_qty + "," + s_price + ")";
 
 		try {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
-			
+
 			salesStatusSearch(table);
 
 			System.out.println("pro_reg 성공");
@@ -280,7 +278,7 @@ public class DBcon {
 			model.removeRow(0);
 		}
 	}
-	
+
 	/*************************************************************************/
 
 	public void insertProduct(String p_code, String p_no, String p_color, String p_size, String p_price) {
@@ -326,7 +324,7 @@ public class DBcon {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void getStoreNameCombobox(JComboBox storeComboBox) {
 		String query = "select distinct sr.s_name from store sr, stock sc "
 				+ "where sr.s_code = sc.s_code and sc.p_qty > 0";
@@ -334,7 +332,7 @@ public class DBcon {
 			pstmt = con.prepareStatement(query);
 			rs = pstmt.executeQuery();
 
-			while(rs.next()) {
+			while (rs.next()) {
 				storeComboBox.addItem(rs.getString(1));
 			}
 
@@ -390,85 +388,139 @@ public class DBcon {
 	}
 
 	public void updateStock(String c_stock, String s_name, String p_no, String p_color, String p_size) {
-		String query = "update stock\r\n" + 
-				"set p_qty = "+c_stock+"\r\n" + 
-				"where stock.p_code in(select p_code from product \r\n" + 
-				"where p_no = "+p_no+" and p_color = '"+p_color+"' and p_size = '"+p_size+"') \r\n" + 
-				"and stock.s_code in(select s_code from store where s_name = '"+s_name+"')";
-		
-		String query1 = "select p_code from product \r\n" + 
-				"where p_no = "+p_no+" and p_color = '"+p_color+"' \r\n" + 
-				"and p_size = '"+p_size+"'";
+		String query = "update stock\r\n" + "set p_qty = " + c_stock + "\r\n"
+				+ "where stock.p_code in(select p_code from product \r\n" + "where p_no = " + p_no + " and p_color = '"
+				+ p_color + "' and p_size = '" + p_size + "') \r\n"
+				+ "and stock.s_code in(select s_code from store where s_name = '" + s_name + "')";
+
+		String query1 = "select p_code from product \r\n" + "where p_no = " + p_no + " and p_color = '" + p_color
+				+ "' \r\n" + "and p_size = '" + p_size + "'";
 
 		try {
 			PreparedStatement pstmt1 = null;
 			ResultSet rs1 = null;
 			pstmt1 = con.prepareStatement(query1);
 			rs1 = pstmt1.executeQuery();
-			
-			if(rs1.next()) {
+
+			if (rs1.next()) {
 				pstmt = con.prepareStatement(query);
 				rs = pstmt.executeQuery();
-				JOptionPane.showMessageDialog(null, p_size+"수정되었습니다.");				
-			}else {
-				JOptionPane.showMessageDialog(null, p_size+"사이즈 상품등록이 필요합니다.");
+				JOptionPane.showMessageDialog(null, p_size + "수정되었습니다.");
+			} else {
+				JOptionPane.showMessageDialog(null, p_size + "사이즈 상품등록이 필요합니다.");
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void createAccount(String id, String pw,String personName,String phone,
-			String group, String storeName, String m_id,String h_id,String radio) {
-		
-		if(radio.equals("매장")) {
+
+	public void createAccount(String id, String pw, String personName, String phone, String group, String storeName,
+			String manage, String radio) {
+
+		PreparedStatement pstmt1 = null;
+		ResultSet rs1 = null;
+
+		PreparedStatement checkId = null;
+		ResultSet checkIdRs = null;
+
+		PreparedStatement checkMgrId = null;
+		ResultSet checkMgrIdRs = null;
+
+		String query;
+		String query1;
+		String checkIdQuery;
+		int createUserCnt = 0;
+
+		if (radio.equals("본사")) {
+			checkIdQuery = "select h_id from head";
+
 			try {
-				String s_code = null;
-				String query1 = "SELECT round(DBMS_RANDOM.VALUE(1,10)*1000) RANDOM FROM dual";
-				PreparedStatement pstmt1 = null;
-				ResultSet rs1 = null;
-				PreparedStatement pstmt2 = null;
-				ResultSet rs2 = null;
-				
-				pstmt1 = con.prepareStatement(query1);
-				rs1 = pstmt1.executeQuery();
-				
-				String query2 = "select SUBSTR(s_code,2,5) from store";		
-				pstmt2 = con.prepareStatement(query2);
-				rs2 = pstmt1.executeQuery();
-				
-				if(rs1.getString(1) != rs2.getString(1)) {
-					s_code = "S"+rs1.getString(1);
-					String query = "insert into manager VALUES('"+id+"','"+pw+"','"+personName+
-							"','"+phone+"');\r\n" + 
-							"insert into store VALUES('S',2,'문래','000-00-00','q','head1');";		
+				checkId = con.prepareStatement(checkIdQuery);
+				checkIdRs = checkId.executeQuery();
+
+				while (checkIdRs.next()) {
+					if (id.equals(checkIdRs.getString(1))) {
+						createUserCnt = 0;
+						break;
+					} else {
+						createUserCnt = 1;
+					}
+				}
+
+				if (createUserCnt == 1) {
+					query = "insert into head values('" + id + "','" + pw + "','" + personName + "','" + phone + "')";
+					query1 = "insert into store values('H1234',"+group+",'" + storeName + "','" + phone + "','" + id + "','"
+							+ id + "')";
 					pstmt = con.prepareStatement(query);
 					rs = pstmt.executeQuery();
-					JOptionPane.showMessageDialog(null, "생성되었습니다.");
 
-				}else {
+					pstmt1 = con.prepareStatement(query1);
+					rs1 = pstmt1.executeQuery();
+					JOptionPane.showMessageDialog(null, "입력되었습니다.");
+				} else {
+					JOptionPane.showMessageDialog(null, "이미 있는 아이디 입니다.");
 				}
-				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}else {
-			try {
-				String query = "insert into head VALUES('q','q','한재국','010-1111-1111');\r\n" + 
-						"insert into store VALUES('H',2,'문래','000-00-00','q','q');";
-				pstmt = con.prepareStatement(query);
-				rs = pstmt.executeQuery();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		} else {
 
+			checkIdQuery = "select m_id from manager";
+			String checkMgrIdQuery = "select h_id from head";
+
+			try {
+				checkId = con.prepareStatement(checkIdQuery);
+				checkIdRs = checkId.executeQuery();
+
+				checkMgrId = con.prepareStatement(checkMgrIdQuery);
+				checkMgrIdRs = checkId.executeQuery();
+
+				while (checkIdRs.next()) {
+					if (id.equals(checkIdRs.getString(1))) {
+						createUserCnt = 0;
+						break;
+					} else {
+						createUserCnt = 1;
+					}
+				}
+
+				if (createUserCnt == 0) {
+					query = "insert into manager values('" + id + "','" + pw + "','" + personName + "','" + phone
+							+ "')";
+					query1 = "insert into store values('S1234',"+group+",'" + storeName + "','" + phone + "','" + id + "','"
+							+ manage + "')";
+
+					int checkMgrCnt = 0;
+					while (checkMgrIdRs.next()) {
+						if (manage.equals(checkMgrIdRs.getString(1))) {
+							checkMgrCnt = 1;
+							break;
+
+						} else
+							checkMgrCnt = 0;
+					}
+					if (checkMgrCnt == 0) {
+						pstmt = con.prepareStatement(query);
+						rs = pstmt.executeQuery();
+						
+						pstmt1 = con.prepareStatement(query1);
+						rs1 = pstmt1.executeQuery();
+						
+						JOptionPane.showMessageDialog(null, "입력되었습니다.");
+					} else {
+						JOptionPane.showMessageDialog(null, "매니저 ID를 확인해주세요.");
+					}
+
+				} else {
+					JOptionPane.showMessageDialog(null, "이미 존재하는 ID입니다.");
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
-		
-
 	}
-	
-	
-	
+
 }
