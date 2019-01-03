@@ -218,10 +218,11 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 			String manage = manage_Field.getText();
 			
 			if(radio.equals("º»»ç")) {
-				myDBcon.createAccount(id, pw, personName, phone, "1", storeName, manage, radio);				
+				myDBcon.createAccount(id, pw, personName, phone, storeName, id, radio);				
 			}else {
-				myDBcon.createAccount(id, pw, personName, phone, "2", storeName, manage, radio);
+				myDBcon.createAccount(id, pw, personName, phone, storeName, manage, radio);
 			}
+			
 			
 		}
 		

@@ -415,110 +415,128 @@ public class DBcon {
 		}
 	}
 
-	public void createAccount(String id, String pw, String personName, String phone, String group, String storeName,
-			String manage, String radio) {
+	public void createAccount(String id, String pw, String personName, String phone, String storeName, String manage,
+			String radio) {
 
 		PreparedStatement pstmt1 = null;
 		ResultSet rs1 = null;
 
-		PreparedStatement checkId = null;
-		ResultSet checkIdRs = null;
+		PreparedStatement checkHeadId = null;
+		ResultSet checkHeadIdRs = null;
+		
+		PreparedStatement checkStoreId = null;
+		ResultSet checkStoreIdRs = null;
 
-		PreparedStatement checkMgrId = null;
-		ResultSet checkMgrIdRs = null;
 
 		String query;
 		String query1;
-		String checkIdQuery;
-		int createUserCnt = 0;
+		String checkStoreIdQuery = "select m_id from manager";;
+		String checkHeadIdQuery = "select h_id from head";;
+		int headCount = 0;
+		int storeCount = 0;
+		int checkMgrCnt = 0;
 
 		if (radio.equals("본사")) {
-			checkIdQuery = "select h_id from head";
-
 			try {
-				checkId = con.prepareStatement(checkIdQuery);
-				checkIdRs = checkId.executeQuery();
+				checkHeadId = con.prepareStatement(checkHeadIdQuery);
+				checkHeadIdRs = checkHeadId.executeQuery();
+				
+				checkStoreId = con.prepareStatement(checkHeadIdQuery);
+				checkStoreIdRs = checkStoreId.executeQuery();
 
-				while (checkIdRs.next()) {
-					if (id.equals(checkIdRs.getString(1))) {
-						createUserCnt = 0;
+				while (checkHeadIdRs.next()) {
+					if (id.equals(checkHeadIdRs.getString(1))) {
+						headCount = 0;
 						break;
 					} else {
-						createUserCnt = 1;
+						headCount = 1;
 					}
 				}
+				
+				while(checkStoreIdRs.next()) {
+					if(id.equals(checkStoreIdRs.getString(1))) {
+						storeCount = 0;
+						break;
+					} else {
+						storeCount = 1;
+					}
+				}
+				
+				
 
-				if (createUserCnt == 1) {
+				if (headCount == 1 && storeCount ==1) {
 					query = "insert into head values('" + id + "','" + pw + "','" + personName + "','" + phone + "')";
-					query1 = "insert into store values('H1234',"+group+",'" + storeName + "','" + phone + "','" + id + "','"
+					query1 = "insert into store values('H1234',1,'" + storeName + "','" + phone + "','" + id + "','"
 							+ id + "')";
 					pstmt = con.prepareStatement(query);
 					rs = pstmt.executeQuery();
 
 					pstmt1 = con.prepareStatement(query1);
 					rs1 = pstmt1.executeQuery();
-					JOptionPane.showMessageDialog(null, "입력되었습니다.");
-				} else {
-					JOptionPane.showMessageDialog(null, "이미 있는 아이디 입니다.");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-
-			checkIdQuery = "select m_id from manager";
-			String checkMgrIdQuery = "select h_id from head";
-
-			try {
-				checkId = con.prepareStatement(checkIdQuery);
-				checkIdRs = checkId.executeQuery();
-
-				checkMgrId = con.prepareStatement(checkMgrIdQuery);
-				checkMgrIdRs = checkId.executeQuery();
-
-				while (checkIdRs.next()) {
-					if (id.equals(checkIdRs.getString(1))) {
-						createUserCnt = 0;
-						break;
-					} else {
-						createUserCnt = 1;
-					}
-				}
-
-				if (createUserCnt == 0) {
-					query = "insert into manager values('" + id + "','" + pw + "','" + personName + "','" + phone
-							+ "')";
-					query1 = "insert into store values('S1234',"+group+",'" + storeName + "','" + phone + "','" + id + "','"
-							+ manage + "')";
-
-					int checkMgrCnt = 0;
-					while (checkMgrIdRs.next()) {
-						if (manage.equals(checkMgrIdRs.getString(1))) {
-							checkMgrCnt = 1;
-							break;
-
-						} else
-							checkMgrCnt = 0;
-					}
-					if (checkMgrCnt == 0) {
-						pstmt = con.prepareStatement(query);
-						rs = pstmt.executeQuery();
-						
-						pstmt1 = con.prepareStatement(query1);
-						rs1 = pstmt1.executeQuery();
-						
-						JOptionPane.showMessageDialog(null, "입력되었습니다.");
-					} else {
-						JOptionPane.showMessageDialog(null, "매니저 ID를 확인해주세요.");
-					}
-
+					JOptionPane.showMessageDialog(null, "생성되었습니다.");
 				} else {
 					JOptionPane.showMessageDialog(null, "이미 존재하는 ID입니다.");
 				}
-
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		} else { //매장
+			try {
+				
+				checkHeadId = con.prepareStatement(checkHeadIdQuery);
+				checkHeadIdRs = checkHeadId.executeQuery();
+				
+				checkStoreId = con.prepareStatement(checkHeadIdQuery);
+				checkStoreIdRs = checkStoreId.executeQuery();
+
+				while (checkHeadIdRs.next()) {
+					if (id.equals(checkHeadIdRs.getString(1))) {
+						headCount = 0;
+						break;
+					} else {
+						headCount = 1;
+						if(manage.equals(checkHeadIdRs.getString(1))) {
+							checkMgrCnt = 1;
+							break;
+						}else {
+							checkMgrCnt = 0;
+						}
+					}
+				}
+				
+				while(checkStoreIdRs.next()) {
+					if(id.equals(checkStoreIdRs.getString(1))) {
+						storeCount = 0;
+						break;
+					} else {
+						storeCount = 1;
+					}
+				}
+				
+
+
+				if (headCount == 1 && storeCount ==1) {
+					if (checkMgrCnt == 1) {
+						query = "insert into manager values('" + id + "','" + pw + "','" + personName + "','" + phone
+								+ "')";
+						query1 = "insert into store values('S1234',1,'" + storeName + "','" + phone + "','" + id + "','"
+								+ manage + "')";
+						pstmt = con.prepareStatement(query);
+						rs = pstmt.executeQuery();
+
+						pstmt1 = con.prepareStatement(query1);
+						rs1 = pstmt1.executeQuery();
+						JOptionPane.showMessageDialog(null, "생성되었습니다.");
+					} else {
+						JOptionPane.showMessageDialog(null, "매니저 ID를 확인해주세요.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "이미 존재하는 ID입니다.");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
 		}
 
 	}
