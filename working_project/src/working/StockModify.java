@@ -48,15 +48,12 @@ public class StockModify extends JPanel {
 		setDBcon(dbcon);
 		setLayout(null);
 
-		JLabel Title = new JLabel("상품정보 수정");
+		JLabel Title = new JLabel("재고 관리");
 		Title.setFont(new Font("굴림", Font.BOLD, 20));
 		Title.setBounds(12, 10, 201, 26);
 		add(Title);
 
-		TitledBorder Tb1 = new TitledBorder(new LineBorder(Color.black), "단가수정");
-		Tb1.setTitleColor(Color.black);
-
-		TitledBorder Tb2 = new TitledBorder(new LineBorder(Color.black), "재고 등록 / 수정");
+		TitledBorder Tb2 = new TitledBorder(new LineBorder(Color.black), "재고수정");
 		Tb2.setTitleColor(Color.black);
 
 		JPanel p2 = new JPanel();
