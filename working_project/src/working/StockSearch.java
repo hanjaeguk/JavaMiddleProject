@@ -1,4 +1,12 @@
 package working;
+
+/*
+ * (매장,본사) 재고관리 - 재고조회
+ * 
+ * 검색한 품번의 전 매장의 재고와 판매단가를 확인할 수 있다.
+ * 
+ */
+
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -20,13 +28,13 @@ public class StockSearch extends JPanel implements ActionListener {
 	private DefaultTableModel firstTabModel;
 	private JTable firstTab;
 	private JScrollPane firstSc;
-	private JButton btnSearch;
-	private JLabel lab, lblCode, lblPrice, lblPriceNum;
-	private JTextField txtCode;
+	private JButton searchButton;
+	private JLabel titleLabel, productNoLabel, priceLabel, productPriceLabel;
+	private JTextField productNoField;
 	
 	private DBcon myDBcon;
 	
-	String price = "0";
+	String productPrice = "0";
 	
 	private void setDBcon(DBcon dbcon) {
 		myDBcon = dbcon;
@@ -36,45 +44,45 @@ public class StockSearch extends JPanel implements ActionListener {
 		setDBcon(dbcon);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		// 1
+		// 1 - 제목
 		JPanel p1 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) p1.getLayout();
 		flowLayout.setHgap(10);
 		flowLayout.setVgap(10);
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		add(p1);
-		lab = new JLabel("재고조회");
-		p1.add(lab);
-		lab.setFont(new Font("굴림", Font.PLAIN, 18));
+		titleLabel = new JLabel("재고조회");
+		p1.add(titleLabel);
+		titleLabel.setFont(new Font("굴림", Font.PLAIN, 18));
 
-		// 2
+		// 2 - 품번 입력 및 조회
 		JPanel p2 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) p2.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		add(p2);
 
-		lblCode = new JLabel("품번");
-		p2.add(lblCode);
-		txtCode = new JTextField();
-		txtCode.setColumns(10);
-		p2.add(txtCode);
+		productNoLabel = new JLabel("품번");
+		p2.add(productNoLabel);
+		productNoField = new JTextField();
+		productNoField.setColumns(10);
+		p2.add(productNoField);
 
-		btnSearch = new JButton("조회");
-		btnSearch.addActionListener(this);
-		p2.add(btnSearch);
+		searchButton = new JButton("조회");
+		searchButton.addActionListener(this);
+		p2.add(searchButton);
 		
-		lblPrice = new JLabel(" 판매단가 : ");
-		p2.add(lblPrice);		
-		lblPriceNum = new JLabel(price);
-		p2.add(lblPriceNum);
+		priceLabel = new JLabel(" 판매단가 : ");
+		p2.add(priceLabel);		
+		productPriceLabel = new JLabel(productPrice);
+		p2.add(productPriceLabel);
 
-		// 3
+		// 3 - 빈 패널 (레이아웃을 위함)
 		JPanel p3 = new JPanel();
 		FlowLayout fl_p3 = (FlowLayout) p3.getLayout();
 		fl_p3.setAlignment(FlowLayout.RIGHT);
 		add(p3);
 
-		// 4
+		// 4 - 재고 조회 테이블
 		String firstTabName[] = { "색상", "사이즈", "매장코드", "매장명", "전화번호", "재고" };
 		Object firstData[][] = new Object[0][6];
 		firstTabModel = new DefaultTableModel(firstData, firstTabName){
@@ -87,7 +95,7 @@ public class StockSearch extends JPanel implements ActionListener {
 		firstSc = new JScrollPane(firstTab);
 		add(firstSc);
 
-		// table center align
+		// 테이블 가운데 정렬
 		DefaultTableCellRenderer tCellRenderer = new DefaultTableCellRenderer();
 		tCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -99,13 +107,14 @@ public class StockSearch extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnSearch) {
-			String no = txtCode.getText();
+		// 조회 버튼 action
+		if (e.getSource() == searchButton) {
+			String productNo = productNoField.getText();
 			
 			myDBcon.clear(firstTab);
-			myDBcon.searchStock(firstTab,no);
-			price = myDBcon.getPrice().toString();
-			lblPriceNum.setText(price);
+			myDBcon.searchStock(firstTab,productNo);
+			productPrice = myDBcon.getProductPrice().toString();
+			productPriceLabel.setText(productPrice);
 		}
 	}
 }

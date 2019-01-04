@@ -1,4 +1,10 @@
 package working;
+/*
+ * 로그인창
+ * 
+ * 매장, 본사 구분하여 로그인
+ *  
+ */
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,19 +20,18 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class LoginView extends JFrame implements ActionListener{
-
 	private Start start;
+	
 	private JPanel contentPane;
 	private JTextField idField;
 	private JPasswordField pwField;
-	private JButton btnLogin;
-	private JRadioButton[] rdbtn = new JRadioButton[2];
+	private JButton loginButton;
+	private JRadioButton[] divRadio = new JRadioButton[2];
 	
-	String[] radioText = { "매장", "본사" };
-	String radio = "매장";
+	String[] divRadioList = { "매장", "본사" };
+	String divRadioResult = "매장";
 
 	public LoginView() {
-		// layout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
 		contentPane = new JPanel();
@@ -34,75 +39,77 @@ public class LoginView extends JFrame implements ActionListener{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		// radio button
+		// 매장,본사 구분 라디오버튼
 		ButtonGroup g = new ButtonGroup(); // 라디오 버튼 묶을 그룹
-		for (int i = 0; i < rdbtn.length; i++) {
-			rdbtn[i] = new JRadioButton(radioText[i]);
-			g.add(rdbtn[i]);
-			add(rdbtn[i]);
+		for (int i = 0; i < divRadio.length; i++) {
+			divRadio[i] = new JRadioButton(divRadioList[i]);
+			g.add(divRadio[i]);
+			add(divRadio[i]);
 
-			rdbtn[i].addActionListener(this);
+			divRadio[i].addActionListener(this);
 		}
-		rdbtn[0].setSelected(true); // 해당 버튼이 선택된 상태
-		rdbtn[0].setBounds(240, 84, 62, 23);
-		rdbtn[1].setBounds(317, 84, 121, 23);		
+		divRadio[0].setSelected(true); // '매장' 버튼이 기본 선택
+		divRadio[0].setBounds(240, 84, 62, 23);
+		divRadio[1].setBounds(317, 84, 121, 23);		
 
-		// label, field
-		JLabel lblId = new JLabel("ID :");
-		lblId.setBounds(228, 134, 57, 15);
-		contentPane.add(lblId);
-
-		JLabel lblPw = new JLabel("PW :");
-		lblPw.setBounds(228, 191, 36, 15);
-		contentPane.add(lblPw);
+		// 아이디
+		JLabel idLabel = new JLabel("ID :");
+		idLabel.setBounds(228, 134, 57, 15);
+		contentPane.add(idLabel);
 
 		idField = new JTextField();
 		idField.setBounds(263, 131, 116, 21);
 		contentPane.add(idField);
 		idField.setColumns(10);
 
+		// 비밀번호
+		JLabel pwLable = new JLabel("PW :");
+		pwLable.setBounds(228, 191, 36, 15);
+		contentPane.add(pwLable);
+
 		pwField = new JPasswordField();
 		pwField.setBounds(263, 188, 116, 21);
 		contentPane.add(pwField);
 
-		// button
-		btnLogin = new JButton("LOGIN");
-		btnLogin.addActionListener(this);
-		btnLogin.setBounds(251, 252, 97, 23);
-		contentPane.add(btnLogin);
+		// 로그인 버튼
+		loginButton = new JButton("LOGIN");
+		loginButton.addActionListener(this);
+		loginButton.setBounds(251, 252, 97, 23);
+		contentPane.add(loginButton);
 			
 		setVisible(true);
 	}	
 
-	// main conn
+	// 메인과 연결 메서드
 	public void setMain(Start start) {
 		this.start = start;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// radio btn result return
+		// 라디오 버튼 결과
 		String es = e.getActionCommand();
-		if (es.equals(rdbtn[0].getText())) {
-			this.radio = es;
-		}else if (es.equals(rdbtn[1].getText())){
-			this.radio = es;
+		if (es.equals(divRadio[0].getText())) {
+			this.divRadioResult = es;
+		}else if (es.equals(divRadio[1].getText())){
+			this.divRadioResult = es;
 		}
 		
-		// login btn 
-		// +) id/pw오류 시 텍스트필드 reset, 커서이동
-		if (e.getSource() == btnLogin) {
-			DBcon dbcon = new DBcon(); // db 생성
+		// 로그인 버튼 action
+		if (e.getSource() == loginButton) {
+			DBcon dbcon = new DBcon(); // DB 연결
 			
 			String id = idField.getText();
 			String pw = new String(pwField.getPassword());
-			dbcon.loginCheck(id, pw, radio);
+			dbcon.checkLogin(id, pw, divRadioResult);
 			
-			if(dbcon.getLogCnt() == 1) {
+			if(dbcon.getLoginCount() == 1) {	
+				// 로그인 성공
 				JOptionPane.showMessageDialog(null, "로그인 되었습니다.");
 				start.setDBcon(dbcon); // 로그인 된 계정 DB 넘기기
-				start.showMainFrame();
-			} else {
+				start.showMainFrame(); // 로그인창 닫고 메인창 열어주기
+			} else {	
+				// 로그인 실패
 				JOptionPane.showMessageDialog(null, "ID/PW를 확인해주세요.");
 			}			
 		}
