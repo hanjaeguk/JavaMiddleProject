@@ -38,29 +38,29 @@ public class ProdInfoModify extends JPanel {
 		Tb.setTitleColor(Color.black);
 
 		JPanel priceModifyPanel = new JPanel();
-		priceModifyPanel.setBounds(12, 46, 540, 254);
+		priceModifyPanel.setBounds(12, 50, 500, 300);
 		add(priceModifyPanel);
 		priceModifyPanel.setLayout(null);
 		priceModifyPanel.setBorder(Tb);
 
 		JLabel productNoLabel = new JLabel("품번 :");
-		productNoLabel.setBounds(12, 31, 57, 16);
+		productNoLabel.setBounds(12, 56, 94, 30);
 		productNoLabel.setFont(new Font("굴림", Font.BOLD, 13));
 		productNoLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		priceModifyPanel.add(productNoLabel);
 
 		productNoField = new JTextField();
-		productNoField.setBounds(59, 27, 109, 26);
+		productNoField.setBounds(64, 56, 163, 30);
 		priceModifyPanel.add(productNoField);
 		productNoField.setColumns(10);
 
 		JLabel originalPriceLabel = new JLabel("기존 판매단가 :");
-		originalPriceLabel.setBounds(12, 85, 100, 36);
+		originalPriceLabel.setBounds(12, 130, 100, 30);
 		priceModifyPanel.add(originalPriceLabel);
 		originalPriceLabel.setFont(new Font("굴림", Font.BOLD, 13));
 
 		originalPriceField = new JTextField();
-		originalPriceField.setBounds(118, 91, 109, 26);
+		originalPriceField.setBounds(118, 130, 148, 30);
 		priceModifyPanel.add(originalPriceField);
 		originalPriceField.setColumns(10);
 		originalPriceField.setEditable(false);
@@ -80,22 +80,22 @@ public class ProdInfoModify extends JPanel {
 			}
 
 		});
-		searchButton.setBounds(180, 27, 70, 25);
+		searchButton.setBounds(252, 56, 83, 30);
 		priceModifyPanel.add(searchButton);
 
 		JLabel priceModifyLabel = new JLabel("변경 판매단가 :");
-		priceModifyLabel.setBounds(12, 143, 100, 36);
+		priceModifyLabel.setBounds(12, 200, 100, 30);
 		priceModifyPanel.add(priceModifyLabel);
 		priceModifyLabel.setFont(new Font("굴림", Font.BOLD, 13));
 		priceModifyLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		priceModifyField = new JTextField();
-		priceModifyField.setBounds(118, 149, 109, 26);
+		priceModifyField.setBounds(118, 200, 148, 30);
 		priceModifyPanel.add(priceModifyField);
 		priceModifyField.setColumns(10);
 
 		JButton updateButton = new JButton("확인");
-		updateButton.setBounds(252, 134, 83, 54);
+		updateButton.setBounds(300, 200, 83, 30);
 		priceModifyPanel.add(updateButton);
 		updateButton.addActionListener(new ActionListener() {
 			

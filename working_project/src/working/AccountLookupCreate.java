@@ -71,7 +71,7 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		add(createButton);
 
 		JPanel createAccountPanel = new JPanel();
-		createAccountPanel.setBounds(0, 52, 600, 74);
+		createAccountPanel.setBounds(12, 52, 600, 74);
 		add(createAccountPanel);
 		createAccountPanel.setLayout(new GridLayout(0, 6, 0, 0));
 
@@ -136,7 +136,7 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		add(searchAccountLabel);
 
 		JScrollPane searchAccountscrollPane = new JScrollPane();
-		searchAccountscrollPane.setBounds(0, 178, 600, 200);
+		searchAccountscrollPane.setBounds(12, 178, 600, 200);
 		add(searchAccountscrollPane);
 
 		searchAccountTable = new JTable() {

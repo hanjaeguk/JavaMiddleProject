@@ -43,7 +43,7 @@ public class StockModify extends JPanel {
 		Tb.setTitleColor(Color.black);
 
 		JPanel stockModifyPanel = new JPanel();
-		stockModifyPanel.setBounds(12, 53, 540, 314);
+		stockModifyPanel.setBounds(12, 50, 500, 300);
 
 		add(stockModifyPanel);
 		stockModifyPanel.setLayout(null);
@@ -55,20 +55,20 @@ public class StockModify extends JPanel {
 		stockModifyPanel.add(storeLabel);
 
 		JComboBox storeComboBox = new JComboBox();
-		storeComboBox.setBounds(67, 44, 148, 26);
+		storeComboBox.setBounds(67, 44, 132, 26);
 		storeComboBox.setFont(new Font("±º∏≤", Font.PLAIN, 13));
 		storeComboBox.setMaximumRowCount(100);
 		stockModifyPanel.add(storeComboBox);
 		myDBcon.getStoreNameCombobox(storeComboBox);
 
 		JLabel proNoLabel = new JLabel("«∞π¯ :");
-		proNoLabel.setBounds(239, 39, 59, 36);
+		proNoLabel.setBounds(211, 39, 59, 36);
 		proNoLabel.setFont(new Font("±º∏≤", Font.BOLD, 13));
 		stockModifyPanel.add(proNoLabel);
 
 		proNoTextField = new JTextField();
 		proNoTextField.setColumns(10);
-		proNoTextField.setBounds(289, 45, 109, 26);
+		proNoTextField.setBounds(263, 45, 109, 26);
 		stockModifyPanel.add(proNoTextField);
 
 		JComboBox colorComboBox = new JComboBox();
@@ -91,7 +91,7 @@ public class StockModify extends JPanel {
 			}
 		});
 		searchColorButton.setFont(new Font("±º∏≤", Font.PLAIN, 12));
-		searchColorButton.setBounds(406, 45, 111, 25);
+		searchColorButton.setBounds(384, 45, 104, 25);
 		stockModifyPanel.add(searchColorButton);
 
 		JLabel colorLabel = new JLabel("ªˆªÛ :");
@@ -131,12 +131,12 @@ public class StockModify extends JPanel {
 		stockModifyPanel.add(searchSizeButton);
 
 		JLabel sizeLabel = new JLabel("ªÁ¿Ã¡Ó :");
-		sizeLabel.setBounds(11, 169, 79, 26);
+		sizeLabel.setBounds(11, 155, 79, 26);
 		stockModifyPanel.add(sizeLabel);
 		sizeLabel.setFont(new Font("±º∏≤", Font.BOLD, 13));
 
 		JPanel sizePanel = new JPanel();
-		sizePanel.setBounds(42, 205, 384, 75);
+		sizePanel.setBounds(21, 191, 384, 75);
 		stockModifyPanel.add(sizePanel);
 		sizePanel.setLayout(new GridLayout(0, 4, 0, 0));
 
@@ -186,7 +186,7 @@ public class StockModify extends JPanel {
 		XL_SizeField.setColumns(10);
 
 		JButton updateButton = new JButton("»Æ¿Œ");
-		updateButton.setBounds(438, 215, 79, 55);
+		updateButton.setBounds(417, 202, 71, 44);
 		stockModifyPanel.add(updateButton);
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
