@@ -105,10 +105,10 @@ public class NewProReg extends JPanel {
 				String productSize = sizeField.getText();
 				String productPrice = priceField.getText();
 
-				String checkProductNo = "\\d{7}";
-				String checkProductColor = "[a-zA-Z]{2}";
-				String checkProductSize = "[sml]|(xl)|[SML]|(XL)|(xL)|(Xl){1,2}";
-				String checkProductPrice = "^[1-9]\\d*";
+				String checkProductNo = "\\d{7}"; // 품번은 7자리로 고정
+				String checkProductColor = "[a-zA-Z]{2}"; // 컬러는 영어 2자리
+				String checkProductSize = "[sml]|(xl)|[SML]|(XL)|(xL)|(Xl){1,2}"; // 사이즈는 s,m,l,xl중 하나
+				String checkProductPrice = "^[1-9]\\d*"; // 숫자는 1~9로 시작하는 숫자
 
 				boolean isProductNo = Pattern.matches(checkProductNo, productNo);
 				boolean isProductColor = Pattern.matches(checkProductColor, productColor);

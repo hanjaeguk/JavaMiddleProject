@@ -70,9 +70,9 @@ public class ProdInfoModify extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				String price;
 				String productNo = productNoField.getText();
-				if(productNo.isEmpty()) {
+				if(productNo.isEmpty()) { // 품번이 공백이면
 					JOptionPane.showMessageDialog(null, "품번을 입력해주세요.");
-				}else {
+				}else { // 품번이 공백이 아니면 그 품번 조회
 					myDBcon.searchProduct(productNo);
 					price = myDBcon.getProductPrice().toString();
 					originalPriceField.setText(price);					
@@ -106,10 +106,10 @@ public class ProdInfoModify extends JPanel {
 				String priceModify =priceModifyField.getText();
 				String productNo = productNoField.getText();
 				
-				if(originalPrice.isEmpty()) {
+				if(originalPrice.isEmpty()) { // 조회한 품번 가격이 공백이면
 					JOptionPane.showMessageDialog(null, "변경할 품번을 먼저 조회해주세요.");
-				} else {
-					if(priceModify.isEmpty()) {
+				} else { // 조회는 하였으나
+					if(priceModify.isEmpty()) { // 변경할려고 하는 가격이 공백이면
 						JOptionPane.showMessageDialog(null, "변경할 가격을 입력해주세요.");
 					} else {
 						myDBcon.updatePrice(priceModify, productNo);											

@@ -80,7 +80,8 @@ public class StockModify extends JPanel {
 		JButton searchColorButton = new JButton("색상 조회");
 		searchColorButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				colorComboBox.removeAllItems();
+				colorComboBox.removeAllItems(); // 매장명, 품번으로 해당 색상을 조회
+												// 매번 할떄마다 콤보박스 초기화
 				S_SizeField.setText(null);
 				M_SizeField.setText(null);
 				L_SizeField.setText(null);

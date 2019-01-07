@@ -157,8 +157,8 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		JButton searchButton = new JButton("조회");
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				myDBcon.clear(searchAccountTable);
-				myDBcon.searchAccount(searchAccountTable, radio2);
+				myDBcon.clear(searchAccountTable); // 테이블 초기화
+				myDBcon.searchAccount(searchAccountTable, radio2); // 조회
 				System.out.println(radio2);
 			}
 		});
@@ -177,11 +177,11 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 				public void actionPerformed(ActionEvent e) {
 					// 계정 조회부분 라디오버튼 Action
 					String es1 = e.getActionCommand();
-					if (es1.equals(radioButton2[0].getText())) {
+					if (es1.equals(radioButton2[0].getText())) { //라디오 버튼 매장+본사
 						radio2 = es1;
-					} else if (es1.equals(radioButton2[1].getText())) {
+					} else if (es1.equals(radioButton2[1].getText())) { // 라디오버튼 매장
 						radio2 = es1;
-					} else if (es1.equals(radioButton2[2].getText())) {
+					} else if (es1.equals(radioButton2[2].getText())) { // 라디오버튼 본사
 						radio2 = es1;
 					}
 
@@ -197,16 +197,16 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) { // 생성버튼 동작
 		// 계정 생성부분 라디오버튼 Action
 		String es = e.getActionCommand();
-		if (es.equals(radioButton1[0].getText())) {
+		if (es.equals(radioButton1[0].getText())) { // 라디오버튼에서 매장 선택시
 			this.radio1 = es;
-			managerField.setEditable(true);
-		} else if (es.equals(radioButton1[1].getText())) {
+			managerField.setEditable(true); // 담당자 필드 입력가능
+		} else if (es.equals(radioButton1[1].getText())) { // 라디오버튼에서 본사 선택시
 			this.radio1 = es;
-			managerField.setText(null);
-			managerField.setEditable(false);
+			managerField.setText(null); // 담당자 필드 초기화
+			managerField.setEditable(false); // 담당자 필드 입력 불가능
 		}
 
 		if (e.getSource() == createButton) {
@@ -226,17 +226,17 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 			
 
 
-			if (radio1.equals("본사")) {
-				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty()) {
+			if (radio1.equals("본사")) { // 본사
+				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty()) { // 필수사항이 공백이면
 					JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
-				}else {
+				}else { // 필수사항이 공백이 아니면
 					myDBcon.createAccount(id, password, personName, phone, storeName, id, radio1);					
 				}
 
-			} else {
-				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty() || manage.isEmpty()) {
+			} else { // 매장
+				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty() || manage.isEmpty()) { // 필수사항이 공백이면
 					JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
-				}else {
+				}else { // 필수사항이 공백이아니면
 					myDBcon.createAccount(id, password, personName, phone, storeName, manage, radio1);					
 				}
 			}
