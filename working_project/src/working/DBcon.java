@@ -30,7 +30,7 @@ public class DBcon {
 	int loginCount; // 로그인 여부. 1성공 0실패
 	int queryResultCount = 0; // 쿼리문 결과 여부. 1있음 0없음
 
-	String loginUser; // 현재 로그인한 유저의 매장코드
+	String loginUser, loginStore; // 현재 로그인한 유저의 매장코드, 매장이름
 	String productCode; // 상품 조회 후 등록을 위한 저장 변수
 	int productPrice, stockQuantity, salesQuantity; // 상품 조회 후 반환을 위한 저장 변수
 
@@ -39,7 +39,7 @@ public class DBcon {
 	int monthTotalPrice = 0; // 월매출 저장 변수
 	String salesNum = "0"; // 일판매번호 저장변수
 
-	// LocalDate currDate = LocalDate.now(); // 오늘 날짜
+	//LocalDate currDate = LocalDate.now(); // 오늘 날짜
 	LocalDate currDate = LocalDate.of(2018, 11, 1);
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
 	String currDateCode = currDate.format(formatter);
@@ -57,8 +57,8 @@ public class DBcon {
 	public void connect() {
 		// String URL = "jdbc:oracle:thin:@localhost:1521:xe";
 		String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-		String ID = "project1";
-		String PW = "pro1";
+		String ID = "project2";
+		String PW = "pro2";
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -102,14 +102,15 @@ public class DBcon {
 			while (rs.next()) {
 				if (id.equals(rs.getString(1)) && pw.equals(rs.getString(2))) {
 					// 로그인 유저의 매장 코드 검색
-					query = "select s_code from store where m_id='" + id + "'";
+					query = "select s_code, s_name from store where m_id='" + id + "'";
 
 					pstmt = con.prepareStatement(query);
 					rs = pstmt.executeQuery();
 					while (rs.next()) {
 						// 로그인 성공
 						this.loginCount = 1;
-						this.loginUser = rs.getString(1); // 로그인 유저의 매장 코드 user에 입력
+						this.loginUser = rs.getString(1); // 로그인 유저의 매장 코드
+						this.loginStore = rs.getString(2); // 로그인 유저의 매장 이름
 					}
 					System.out.println("접속 매장:" + loginUser);
 					break;
@@ -131,6 +132,10 @@ public class DBcon {
 	public String getLoginUser() {
 		return loginUser; // 로그인 유저 MainFrame에 반환
 	}
+	
+	public String getLoginStore() {
+		return loginStore; // 로그인 매장 StoreStockSearch에 반환
+	}	
 
 	/****************************************************************/
 
@@ -203,7 +208,6 @@ public class DBcon {
 			e.printStackTrace();
 		}
 	}
-
 	public Integer getDayTotalPrice() {
 		return dayTotalPrice; // 일 총판매금액 SalesReg에 반환
 	}
@@ -246,13 +250,14 @@ public class DBcon {
 			e.printStackTrace();
 		}
 	}
+	
 
 	public Integer getProductPrice() {
-		return productPrice; // 판매단가 SalesReg, searchProduct에 반환
+		return productPrice; // 판매단가 SalesReg, StockSearch에 반환
 	}
 
 	public Integer getStockQuantity() {
-		return stockQuantity; // 재고수량 SalesReg,StockSearch에 반환
+		return stockQuantity; // 재고수량 SalesReg에 반환
 	}
 
 	public Integer getSalesQuantity() {
@@ -262,6 +267,7 @@ public class DBcon {
 	// *판매관리 - 판매등록 - 등록 버튼
 	// 상품 판매,반품 데이터 삽입
 	public void registerSales(JTable totalTable, String salesDiv, String salesQuantity, String salesPrice) {
+		//this.tableSave = totalTable;
 		int salesDivCode;
 
 		if (salesDiv.equals("판매")) {
@@ -391,10 +397,9 @@ public class DBcon {
 	// *재고관리 - 재고조회 - 조회 버튼
 	// 해당 품번 재고 조회
 	public void searchStock(JTable stockTable, String productNo) {
-		this.tableSave = stockTable;
 		queryResultCount = 0;
 
-		String query = "select p_no, p_price, p_color, p_size, store.s_code, s_name, s_phone, stock.p_qty\r\n"
+		String query = "select p_price, p_color, p_size, store.s_code, s_name, s_phone, stock.p_qty\r\n"
 				+ "from product, stock, store\r\n" + "where product.p_code=stock.p_code\r\n"
 				+ "and store.s_code=stock.s_code\r\n" + "and p_no='" + productNo + "'\r\n" + "order by store.s_code";
 
@@ -405,13 +410,13 @@ public class DBcon {
 			while (rs.next()) {
 				queryResultCount = 1;
 
-				this.productPrice = rs.getInt(2);
-				String productColor = rs.getString(3);
-				String productSize = rs.getString(4);
-				String storeCode = rs.getString(5);
-				String storeName = rs.getString(6);
-				String phone = rs.getString(7);
-				String stockQuantity = rs.getString(8);
+				this.productPrice = rs.getInt(1);
+				String productColor = rs.getString(2);
+				String productSize = rs.getString(3);
+				String storeCode = rs.getString(4);
+				String storeName = rs.getString(5);
+				String phone = rs.getString(6);
+				String stockQuantity = rs.getString(7);
 
 				Object newData[] = { productColor, productSize, storeCode, storeName, phone, stockQuantity };
 				DefaultTableModel newModel = (DefaultTableModel) stockTable.getModel();
@@ -429,9 +434,38 @@ public class DBcon {
 			e.printStackTrace();
 		}
 	}
-
+	
+	// *재고관리 - 매장 재고조회 - 조회 버튼
 	// 매장내 전체재고 조회
-	// public void searchStock(JTable table) {}
+	public void searchStoreStock(JTable stockTable) {
+		String query = "select p_no, p_price, p_color, p_size, stock.p_qty\r\n" 
+				+ "from product, stock\r\n" 
+				+ "where product.p_code=stock.p_code\r\n" 
+				+ "and stock.s_code='"+ loginUser +"'\r\n"
+				+ "order by p_no";
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+
+				String productNo = rs.getString(1);
+				String productPrice = rs.getString(2);
+				String productColor = rs.getString(2);
+				String productSize = rs.getString(4);
+				String stockQuantity = rs.getString(5);
+
+				Object newData[] = { productNo, productPrice, productColor, productSize, stockQuantity };
+				DefaultTableModel newModel = (DefaultTableModel) stockTable.getModel();
+				newModel.addRow(newData);
+			}
+			System.out.println("searchStoreStock 성공");
+		} catch (SQLException e) {
+			System.out.println("searchStoreStock 오류");
+			e.printStackTrace();
+		}
+	}
 
 	// JTable 필드 초기화
 	public void clear(JTable table) {
@@ -441,9 +475,6 @@ public class DBcon {
 		}
 	}
 
-	/*************************************************************************/
-	/*************************************************************************/
-	/*************************************************************************/
 	/*************************************************************************/
 	/*************************************************************************/
 	/*************************************************************************/
@@ -490,7 +521,7 @@ public class DBcon {
 	// 단가수정 - 품번으로 상품가격 조회
 	public void searchProduct(String productNo) {
 		String query1 = "SELECT DISTINCT P_PRICE FROM PRODUCT WHERE P_NO =" + productNo;
-		String query2 = "select p_no from product";
+		String query2 = "select p_no from product"; // 품번이 존재하는 품번인제 체크하기 위한 쿼리
 		PreparedStatement pstmt1 = null;
 		ResultSet rs1 = null;
 		

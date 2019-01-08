@@ -71,7 +71,7 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		add(createButton);
 
 		JPanel createAccountPanel = new JPanel();
-		createAccountPanel.setBounds(12, 52, 600, 74);
+		createAccountPanel.setBounds(12, 52, 600, 58);
 		add(createAccountPanel);
 		createAccountPanel.setLayout(new GridLayout(0, 6, 0, 0));
 
@@ -132,11 +132,11 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 
 		JLabel searchAccountLabel = new JLabel("계정 조회");
 		searchAccountLabel.setFont(new Font("굴림", Font.BOLD, 20));
-		searchAccountLabel.setBounds(12, 136, 99, 32);
+		searchAccountLabel.setBounds(12, 120, 99, 32);
 		add(searchAccountLabel);
 
 		JScrollPane searchAccountscrollPane = new JScrollPane();
-		searchAccountscrollPane.setBounds(12, 178, 600, 200);
+		searchAccountscrollPane.setBounds(12, 162, 600, 216);
 		add(searchAccountscrollPane);
 
 		searchAccountTable = new JTable() {
@@ -162,11 +162,11 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 				System.out.println(radio2);
 			}
 		});
-		searchButton.setBounds(518, 143, 70, 25);
+		searchButton.setBounds(518, 126, 70, 25);
 		add(searchButton);
 
 		JPanel radiobuttonPanel2 = new JPanel();
-		radiobuttonPanel2.setBounds(228, 136, 278, 32);
+		radiobuttonPanel2.setBounds(228, 120, 278, 32);
 		add(radiobuttonPanel2);
 		ButtonGroup radioGroup2 = new ButtonGroup();
 		for (int i = 0; i < radioButton2.length; i++) {
@@ -210,12 +210,7 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		}
 
 		if (e.getSource() == createButton) {
-//			String id = null;
-//			String pw = null;
-//			String storeName = null;
-//			String personName = null;
-//			String phone = null;
-//			String manage = null;
+
 			
 			String id = idField.getText();
 			String password = passwordField.getText();

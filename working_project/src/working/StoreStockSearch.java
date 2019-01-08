@@ -1,12 +1,9 @@
 package working;
 
-import java.awt.Color;
-import java.awt.Component;
-
 /*
- * (매장,본사) 재고관리 - 재고조회
+ * (매장,본사) 재고관리 - 매장 재고조회
  * 
- * 검색한 품번의 전 매장의 재고와 판매단가를 확인할 수 있다.
+ * 현재 매장의 재고와 판매단가를 확인할 수 있다.
  * 
  */
 
@@ -22,19 +19,17 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
-public class StockSearch extends JPanel implements ActionListener {
+public class StoreStockSearch extends JPanel implements ActionListener {
 	private DefaultTableModel firstTabModel;
 	private JTable firstTab;
 	private JScrollPane firstSc;
 	private JButton searchButton;
-	private JLabel titleLabel, productNoLabel, priceLabel, productPriceLabel;
-	private JTextField productNoField;
+	private JLabel titleLabel, storeLabel;
 
 	private DBcon myDBcon;
 
@@ -45,7 +40,7 @@ public class StockSearch extends JPanel implements ActionListener {
 		myDBcon = dbcon;
 	}
 
-	public StockSearch(DBcon dbcon) {
+	public StoreStockSearch(DBcon dbcon) {
 		setDBcon(dbcon);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -56,31 +51,22 @@ public class StockSearch extends JPanel implements ActionListener {
 		flowLayout.setVgap(10);
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		add(p1);
-		titleLabel = new JLabel("재고조회");
+		titleLabel = new JLabel("매장 재고조회");
 		p1.add(titleLabel);
 		titleLabel.setFont(new Font("굴림", Font.BOLD, 20));
-		
 
-		// 2 - 품번 입력 및 조회
+		// 2 - 조회
 		JPanel p2 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) p2.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		add(p2);
 
-		productNoLabel = new JLabel("품번");
-		p2.add(productNoLabel);
-		productNoField = new JTextField();
-		productNoField.setColumns(10);
-		p2.add(productNoField);
-
 		searchButton = new JButton("조회");
 		searchButton.addActionListener(this);
 		p2.add(searchButton);
-
-		priceLabel = new JLabel(" 판매단가 : ");
-		p2.add(priceLabel);
-		productPriceLabel = new JLabel(productPrice);
-		p2.add(productPriceLabel);
+		
+		storeLabel = new JLabel();
+		p2.add(storeLabel);
 
 		// 3 - 빈 패널 (레이아웃을 위함)
 		JPanel p3 = new JPanel();
@@ -89,29 +75,14 @@ public class StockSearch extends JPanel implements ActionListener {
 		add(p3);
 
 		// 4 - 재고 조회 테이블
-		String firstTabName[] = { "색상", "사이즈", "매장코드", "매장명", "전화번호", "재고" };
-		Object firstData[][] = new Object[0][6];
+		String firstTabName[] = { "품번", "판매단가", "색상", "사이즈", "재고" };
+		Object firstData[][] = new Object[0][5];
 		firstTabModel = new DefaultTableModel(firstData, firstTabName) {
 			public boolean isCellEditable(int row, int col) {
 				return false; // 테이블 수정 못하게
 			}
 		};
-		firstTab = new JTable(firstTabModel) {
-			// 특정 행의 글자 색상 변경
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-				Component compo = super.prepareRenderer(renderer, row, column);
-
-				String type = (String) getModel().getValueAt(row, 2);
-				if (type.equalsIgnoreCase(loginUser)) {
-					// 매장코드가 로그인 매장일 경우
-					compo.setForeground(Color.BLUE);
-				} else {
-					compo.setForeground(Color.DARK_GRAY);
-				}
-				return compo;
-			}
-		};
+		firstTab = new JTable(firstTabModel);
 		firstTab.getTableHeader().setReorderingAllowed(false); // 테이블 열 고정
 		firstSc = new JScrollPane(firstTab);
 		add(firstSc);
@@ -130,13 +101,11 @@ public class StockSearch extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// 조회 버튼 action
 		if (e.getSource() == searchButton) {
-			String productNo = productNoField.getText();
-
+			String looginStore = myDBcon.getLoginStore();
+			storeLabel.setText(looginStore);
+			
 			myDBcon.clear(firstTab);
-			myDBcon.searchStock(firstTab, productNo);
-			productPrice = myDBcon.getProductPrice().toString();
-			loginUser = myDBcon.getLoginUser();
-			productPriceLabel.setText(productPrice);
+			myDBcon.searchStoreStock(firstTab);
 		}
 	}
 }

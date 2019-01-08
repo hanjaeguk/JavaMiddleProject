@@ -59,7 +59,7 @@ public class SalesStatus extends JPanel implements ActionListener {
 		add(p1);
 		titleLabel = new JLabel("판매현황");
 		p1.add(titleLabel);
-		titleLabel.setFont(new Font("굴림", Font.PLAIN, 18));
+		titleLabel.setFont(new Font("굴림", Font.BOLD, 20));
 
 		// 2 - 기간 선택, 조회
 		JPanel p2 = new JPanel();
