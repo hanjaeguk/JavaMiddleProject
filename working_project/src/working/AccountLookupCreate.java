@@ -162,11 +162,11 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 				System.out.println(radio2);
 			}
 		});
-		searchButton.setBounds(518, 126, 70, 25);
+		searchButton.setBounds(413, 126, 70, 25);
 		add(searchButton);
 
 		JPanel radiobuttonPanel2 = new JPanel();
-		radiobuttonPanel2.setBounds(228, 120, 278, 32);
+		radiobuttonPanel2.setBounds(155, 120, 246, 32);
 		add(radiobuttonPanel2);
 		
 
@@ -200,7 +200,7 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		
 		DefaultTableModel tableModel = (DefaultTableModel) searchAccountTable.getModel();
 
-		JButton deleteButton = new JButton("삭제");
+		JButton deleteButton = new JButton("매장 삭제");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -216,9 +216,13 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 					if(user.equals(checkStoreCode)) {
 						JOptionPane.showMessageDialog(null, "현재 접속중은 계정은 지울 수 없습니다.");
 					}else {
-						myDBcon.deleteManagerAccount(id, storeGroup);
-						tableModel.removeRow(searchAccountTable.getSelectedRow());
-						JOptionPane.showMessageDialog(null, "삭제하였습니다.");
+						if(storeGroup.equals("매장")) {
+							myDBcon.deleteManagerAccount(id, storeGroup);
+							tableModel.removeRow(searchAccountTable.getSelectedRow());
+							JOptionPane.showMessageDialog(null, "삭제하였습니다.");							
+						}else {
+							JOptionPane.showMessageDialog(null, "본사계정은 접근이 불가능합니다.");
+						}
 					}					
 				}else {
 					JOptionPane.showMessageDialog(null, "행을 선택해주세요.");
@@ -226,7 +230,7 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 				
 			}
 		});
-		deleteButton.setBounds(119, 127, 97, 23);
+		deleteButton.setBounds(508, 126, 104, 25);
 		add(deleteButton);
 	}
 	

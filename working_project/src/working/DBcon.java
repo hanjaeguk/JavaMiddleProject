@@ -1021,16 +1021,11 @@ public void createAccount(String id, String password, String personName, String 
 	public void deleteManagerAccount(String id,String storeGroup) {
 		String query;
 
-		try {
-
-			if(storeGroup.equals("매장")) {				
+		try {			
 				query = "delete from manager where m_id = '"+id+"'";
 				pstmt = con.prepareStatement(query);
 				rs = pstmt.executeQuery();
-
-			}else {
-				JOptionPane.showMessageDialog(null, "본사 계정은 접근이 불가능합니다.");
-			}
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
