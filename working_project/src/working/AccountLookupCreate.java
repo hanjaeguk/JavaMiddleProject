@@ -148,9 +148,9 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		searchAccountTable.getTableHeader().setReorderingAllowed(false); // 이동불가
 		searchAccountTable.getTableHeader().setResizingAllowed(false); // 크기조절 불가
 
+		 
 		searchAccountTable.setModel(
 				new DefaultTableModel(new Object[][] {}, new String[] { "구분", "ID", "매장명", "담당자 이름", "전화번호" }));
-
 		searchAccountscrollPane.setViewportView(searchAccountTable);
 		searchAccountTable.setRowHeight(30);
 
@@ -168,6 +168,9 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		JPanel radiobuttonPanel2 = new JPanel();
 		radiobuttonPanel2.setBounds(228, 120, 278, 32);
 		add(radiobuttonPanel2);
+		
+
+		
 		ButtonGroup radioGroup2 = new ButtonGroup();
 		for (int i = 0; i < radioButton2.length; i++) {
 			radioButton2[i] = new JRadioButton(radioText2[i]);
@@ -194,7 +197,40 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		searchAccountTable.getColumnModel().getColumn(0).setPreferredWidth(30);
 		searchAccountTable.getColumnModel().getColumn(1).setPreferredWidth(50);
 		searchAccountTable.getColumnModel().getColumn(3).setPreferredWidth(50);
+		
+		DefaultTableModel tableModel = (DefaultTableModel) searchAccountTable.getModel();
+
+		JButton deleteButton = new JButton("삭제");
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				if(searchAccountTable.getSelectedRow() >= 0) {
+					int row = searchAccountTable.getSelectedRow();
+					String storeGroup = (String) searchAccountTable.getValueAt(row, 0);
+					String id = (String) searchAccountTable.getValueAt(row, 1);
+					String user = myDBcon.getLoginUser();
+					
+					myDBcon.checkCode(id);
+					String checkStoreCode = myDBcon.getStoreCode(); 
+					if(user.equals(checkStoreCode)) {
+						JOptionPane.showMessageDialog(null, "현재 접속중은 계정은 지울 수 없습니다.");
+					}else {
+						myDBcon.deleteManagerAccount(id, storeGroup);
+						tableModel.removeRow(searchAccountTable.getSelectedRow());
+						JOptionPane.showMessageDialog(null, "삭제하였습니다.");
+					}					
+				}else {
+					JOptionPane.showMessageDialog(null, "행을 선택해주세요.");
+				}
+				
+			}
+		});
+		deleteButton.setBounds(119, 127, 97, 23);
+		add(deleteButton);
 	}
+	
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) { // 생성버튼 동작
@@ -239,5 +275,5 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 		}
 
 	}
-
+	
 }

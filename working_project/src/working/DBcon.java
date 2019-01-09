@@ -802,25 +802,25 @@ public void createAccount(String id, String password, String personName, String 
 			checkHeadId = con.prepareStatement(checkHeadIdQuery);
 			checkHeadIdRs = checkHeadId.executeQuery();
 
-			checkStoreId = con.prepareStatement(checkHeadIdQuery);
+			checkStoreId = con.prepareStatement(checkStoreIdQuery);
 			checkStoreIdRs = checkStoreId.executeQuery();
 
 			while (checkHeadIdRs.next()) { // 본사 아이디 중복검사
-				if (id.equals(checkHeadIdRs.getString(1)) || id.isEmpty()) { 
-					// 같은 아이디가 있거나 아이디를 입력하지 않았을때
+				if (id.equals(checkHeadIdRs.getString(1))) { 
+					// 본사에서 같은 아이디가 있을떄
 					headCount = 0; // headCount에 0 을저장
 					break; // while 종료
-				} else { // 같은아이디가 없거나 아이디가 빈칸이 아닐경우
+				} else { // 없을떄
 					headCount = 1; // headCount에 1을 저장
 				}
 			}
 				//본사직원, 매장직원의 아이디를 겹치지 않게 하기 위해서 매장아이디도 함꼐 중복검사함!
 			while (checkStoreIdRs.next()) {  // 매장아이디 중복검사
 				if (id.equals(checkStoreIdRs.getString(1))) {
-					// 같은 아이디가 있거나 아이디를 입력하지 않았을때
+					// 매장에서 같은 아이디가 있을때
 					storeCount = 0; // storeCount에 0 을저장
 					break; // while 종료
-				} else { // 같은아이디가 없거나 아이디가 빈칸이 아닐경우
+				} else { // 없을떄
 					storeCount = 1; // headCount에 1을 저장
 				}
 			}
@@ -852,7 +852,7 @@ public void createAccount(String id, String password, String personName, String 
 			checkHeadId = con.prepareStatement(checkHeadIdQuery);
 			checkHeadIdRs = checkHeadId.executeQuery();
 
-			checkStoreId = con.prepareStatement(checkHeadIdQuery);
+			checkStoreId = con.prepareStatement(checkStoreIdQuery);
 			checkStoreIdRs = checkStoreId.executeQuery();
 
 			
@@ -997,6 +997,43 @@ public void createAccount(String id, String password, String personName, String 
 			}
 		}
 
+	}
+	
+	String storeCode;
+	public String getStoreCode() {
+		return storeCode; // 상품코드 반환
+	}
+	
+	public void checkCode(String id) {
+		String query = "select s_code from store where m_id= '"+id+"'"; // 아이디에 부여된 매장코드
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				String code = rs.getString(1);
+				this.storeCode = code;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteManagerAccount(String id,String storeGroup) {
+		String query;
+
+		try {
+
+			if(storeGroup.equals("매장")) {				
+				query = "delete from manager where m_id = '"+id+"'";
+				pstmt = con.prepareStatement(query);
+				rs = pstmt.executeQuery();
+
+			}else {
+				JOptionPane.showMessageDialog(null, "본사 계정은 접근이 불가능합니다.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
