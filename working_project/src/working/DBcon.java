@@ -521,7 +521,7 @@ public class DBcon {
 	// 단가수정 - 품번으로 상품가격 조회
 	public void searchProduct(String productNo) {
 		String query1 = "SELECT DISTINCT P_PRICE FROM PRODUCT WHERE P_NO =" + productNo;
-		String query2 = "select p_no from product"; // 품번이 존재하는 품번인제 체크하기 위한 쿼리
+		String query2 = "select p_no from product where p_no = "+productNo; // 품번이 존재하는 품번인제 체크하기 위한 쿼리
 		PreparedStatement pstmt1 = null;
 		ResultSet rs1 = null;
 		
@@ -548,6 +548,7 @@ public class DBcon {
 					// getPrice에 품번으로 조회한 상품가격을 저장하여 다시 productPrice로 넘겨준다
 				}				
 			}else { // 존재하지 않으면 조회 쿼리 실행하지 않음
+				this.productPrice = 0;
 				JOptionPane.showMessageDialog(null, "해당품번이 존재하지않습니다.");
 			}
 
@@ -559,7 +560,7 @@ public class DBcon {
 	// 단가수정 - 판매단가 수정
 	public void updatePrice(String priceModify, String productNo) { // 수정할 가격, 품번
 		String query1 = "UPDATE PRODUCT SET P_PRICE = " + priceModify + "WHERE P_NO = " + productNo;
-		String query2 = "select p_no from product"; // 품번검사
+		String query2 = "select p_no from product where p_no = "+productNo; // 품번검사
 		PreparedStatement pstmt1 = null;
 		ResultSet rs1 = null;
 		

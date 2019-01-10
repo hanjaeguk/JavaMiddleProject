@@ -72,8 +72,12 @@ public class ProdInfoModify extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				String price;
 				String productNo = productNoField.getText();
-				if (productNo.isEmpty()) { // 품번이 공백이면
-					JOptionPane.showMessageDialog(null, "품번을 입력해주세요.");
+				String checkProductNo = "\\d{7}"; // 품번은 7자리로 고정
+
+				boolean isProductNo = Pattern.matches(checkProductNo, productNo);
+
+				if (isProductNo ==false || productNo.isEmpty()) { // 품번이 숫자가 아니거나 공백일경우
+					JOptionPane.showMessageDialog(null, "품번은 7자리 숫자로 입력해주세요.");
 				} else { // 품번이 공백이 아니면 그 품번 조회
 					myDBcon.searchProduct(productNo);
 					price = myDBcon.getProductPrice().toString();
