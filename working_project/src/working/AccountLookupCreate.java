@@ -262,7 +262,7 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 			String phone = phoneField.getText();
 			String manage = managerField.getText();
 			
-			String checkPhone = "\\d{9,11}"; // 품번은 7자리로 고정
+			String checkPhone = "\\d{9,11}"; // 전화번호는 숫자 9~11자리
 			
 			boolean isCheckPhone = Pattern.matches(checkPhone, phone);
 
