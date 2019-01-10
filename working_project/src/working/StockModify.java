@@ -102,13 +102,12 @@ public class StockModify extends JPanel {
 		JButton searchSizeButton = new JButton("재고 조회");
 		searchSizeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String productNo = proNoTextField.getText();
-				myDBcon.searchStockColor(colorComboBox, storeComboBox, productNo);
 				
 				if (colorComboBox.getSelectedItem() != null) {
-				String stockQuantity = "0";
+				String productNo = proNoTextField.getText();
 				String storeName = storeComboBox.getSelectedItem().toString();
 				String productColor = colorComboBox.getSelectedItem().toString();
+				String stockQuantity = "0";
 
 				myDBcon.searchSize(storeName, productNo, productColor, "S");
 				stockQuantity = myDBcon.getStockQuantity().toString();
@@ -125,6 +124,8 @@ public class StockModify extends JPanel {
 				myDBcon.searchSize(storeName, productNo, productColor, "XL");
 				stockQuantity = myDBcon.getStockQuantity().toString();
 				XL_SizeField.setText(stockQuantity);
+				}else {
+					JOptionPane.showMessageDialog(null, "품번 조회 후 색상을 선택해 주세요.");
 				}
 			}
 		});
@@ -194,10 +195,8 @@ public class StockModify extends JPanel {
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			
-				String productNo = proNoTextField.getText();
-				myDBcon.searchStockColor(colorComboBox, storeComboBox, productNo);
-
 				if(colorComboBox.getSelectedItem() != null) {
+					String productNo = proNoTextField.getText();
 					String changeStockQuantity = S_SizeField.getText();
 					String storeName = storeComboBox.getSelectedItem().toString();
 					String productColor = colorComboBox.getSelectedItem().toString();
@@ -208,6 +207,8 @@ public class StockModify extends JPanel {
 					M_SizeField.setText(null);
 					L_SizeField.setText(null);
 					XL_SizeField.setText(null);
+				}else {
+					JOptionPane.showMessageDialog(null, "상품 재고를 먼저 조회해주세요.");
 				}
 			}
 		});
