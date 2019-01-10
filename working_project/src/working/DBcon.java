@@ -1018,6 +1018,7 @@ public void createAccount(String id, String password, String personName, String 
 		}
 	}
 	
+	// 매장 계정삭제
 	public void deleteManagerAccount(String id,String storeGroup) {
 		String query;
 

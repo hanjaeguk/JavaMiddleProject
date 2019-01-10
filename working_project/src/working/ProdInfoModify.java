@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
 public class ProdInfoModify extends JPanel {
@@ -20,7 +21,7 @@ public class ProdInfoModify extends JPanel {
 	private JTextField priceModifyField;
 
 	private DBcon myDBcon;
-	
+
 	private void setDBcon(DBcon dbcon) {
 		myDBcon = dbcon;
 	}
@@ -70,12 +71,12 @@ public class ProdInfoModify extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				String price;
 				String productNo = productNoField.getText();
-				if(productNo.isEmpty()) { // 품번이 공백이면
+				if (productNo.isEmpty()) { // 품번이 공백이면
 					JOptionPane.showMessageDialog(null, "품번을 입력해주세요.");
-				}else { // 품번이 공백이 아니면 그 품번 조회
+				} else { // 품번이 공백이 아니면 그 품번 조회
 					myDBcon.searchProduct(productNo);
 					price = myDBcon.getProductPrice().toString();
-					originalPriceField.setText(price);					
+					originalPriceField.setText(price);
 				}
 			}
 
@@ -98,25 +99,28 @@ public class ProdInfoModify extends JPanel {
 		updateButton.setBounds(300, 200, 83, 30);
 		priceModifyPanel.add(updateButton);
 		updateButton.addActionListener(new ActionListener() {
-			
-			
 
 			public void actionPerformed(ActionEvent arg0) {
 				String originalPrice = originalPriceField.getText();
-				String priceModify =priceModifyField.getText();
+				String priceModify = priceModifyField.getText();
 				String productNo = productNoField.getText();
-				
-				if(originalPrice.isEmpty()) { // 조회한 품번 가격이 공백이면
+
+				String checkProductNo = "^[1-9]\\d*"; // 변경가격은 숫자만 입력가능하게!(시작숫자 0은불가)
+
+				boolean isProductPrice = Pattern.matches(checkProductNo, priceModify);
+
+				if (originalPrice.isEmpty()) { // 조회한 품번 가격이 공백이면
 					JOptionPane.showMessageDialog(null, "변경할 품번을 먼저 조회해주세요.");
 				} else { // 조회는 하였으나
-					if(priceModify.isEmpty()) { // 변경할려고 하는 가격이 공백이면
+					if (priceModify.isEmpty()) { // 변경할려고 하는 가격이 공백이면
 						JOptionPane.showMessageDialog(null, "변경할 가격을 입력해주세요.");
+					} else if (isProductPrice == false) {
+						JOptionPane.showMessageDialog(null, "가격은 숫자로 입력해주세요.");
 					} else {
-						myDBcon.updatePrice(priceModify, productNo);											
+						myDBcon.updatePrice(priceModify, productNo);
 					}
 				}
-				
-				
+
 			}
 		});
 		updateButton.setFont(new Font("굴림", Font.PLAIN, 12));

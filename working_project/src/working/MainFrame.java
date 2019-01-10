@@ -96,7 +96,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 
 		// StockSearch 재고조회
-		stockSearchItem = new JMenuItem("재고조회");
+		stockSearchItem = new JMenuItem("상품 재고조회");
 		stockMenu.add(stockSearchItem);
 		stockSearchItem.addActionListener(this);
 		contentPane.add("StockSearch", new StockSearch(myDBcon));
@@ -125,7 +125,7 @@ public class MainFrame extends JFrame implements ActionListener {
 			contentPane.add("ProdInfoModify", new ProdInfoModify(myDBcon));
 
 			// AccountLookupCreate 계정 생성/조회
-			accountLookupItem = new JMenuItem("계정 생성/조회");
+			accountLookupItem = new JMenuItem("계정 관리");
 			adminMenu.add(accountLookupItem);
 			accountLookupItem.addActionListener(this);
 			contentPane.add("Account", new AccountLookupCreate(myDBcon));

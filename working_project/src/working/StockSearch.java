@@ -56,7 +56,7 @@ public class StockSearch extends JPanel implements ActionListener {
 		flowLayout.setVgap(10);
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		add(p1);
-		titleLabel = new JLabel("재고조회");
+		titleLabel = new JLabel("상품 재고조회");
 		p1.add(titleLabel);
 		titleLabel.setFont(new Font("굴림", Font.BOLD, 20));
 		

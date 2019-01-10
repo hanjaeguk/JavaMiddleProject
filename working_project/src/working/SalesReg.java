@@ -49,8 +49,8 @@ public class SalesReg extends JPanel implements ActionListener {
 	String divComboArray[] = { "판매", "반품" };
 	String sizeComboArray[] = { "S", "M", "L", "XL" };
 
-	// LocalDate currDate = LocalDate.now(); //오늘 날짜
-	LocalDate currDate = LocalDate.of(2018, 11, 1);
+	LocalDate currDate = LocalDate.now(); //오늘 날짜
+	//LocalDate currDate = LocalDate.of(2018, 11, 1);
 
 	String code = null;
 	int dayTotalPrice = 0;
@@ -273,14 +273,26 @@ public class SalesReg extends JPanel implements ActionListener {
 		// 삭제 버튼 action
 		if (e.getSource() == deleteButton) {
 			int row = secTable.getSelectedRow(); // 선택한 행 가져오기
-
+			
 			if (secTable.getSelectedRow() >= 0) {
 				// 선택한 행이 있을 경우
-				String deleteSalesNum = (String) secTableModel.getValueAt(row, 0);
-				int deleteSalesPrice = (int) secTableModel.getValueAt(row, 7);
-				myDBcon.salesDelete(firstTable, deleteSalesNum, deleteSalesPrice);
 				
-				secTableModel.removeRow(secTable.getSelectedRow());
+				int dialogResult = JOptionPane.showConfirmDialog(this, "삭제 하시겠습니까?", "delete", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+
+				if (dialogResult == 0) {
+					// Yes
+					String deleteSalesNum = (String) secTableModel.getValueAt(row, 0);
+					int deleteSalesPrice = (int) secTableModel.getValueAt(row, 7);
+					myDBcon.salesDelete(firstTable, deleteSalesNum, deleteSalesPrice);
+					
+					secTableModel.removeRow(secTable.getSelectedRow());
+				}
+				
+//				String deleteSalesNum = (String) secTableModel.getValueAt(row, 0);
+//				int deleteSalesPrice = (int) secTableModel.getValueAt(row, 7);
+//				myDBcon.salesDelete(firstTable, deleteSalesNum, deleteSalesPrice);
+				
 			} else {
 				// 선택한 행이 없을 경우
 				JOptionPane.showMessageDialog(null, "삭제할 행을 클릭하세요.");

@@ -99,7 +99,7 @@ public class NewProReg extends JPanel {
 		insertButton.setBounds(342, 110, 89, 63);
 		newProductPanel.add(insertButton);
 		
-		JLabel lblNewLabel = new JLabel("신상품등록");
+		JLabel lblNewLabel = new JLabel("신상품 등록");
 		lblNewLabel.setFont(new Font("굴림", Font.BOLD, 20));
 		lblNewLabel.setBounds(12, 10, 144, 30);
 		add(lblNewLabel);
