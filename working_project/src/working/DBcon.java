@@ -925,12 +925,12 @@ public void createAccount(String id, String password, String personName, String 
 
 		if (radio.equals("매장+본사")) {//라디오 버튼이 매장+본사일경우
 			try {
-				String query1 = "select sr.s_group,sr.m_id,sr.s_name,hd.h_name,sr.s_phone \r\n" + 
+				String query1 = "select sr.s_group,sr.m_id,sr.s_name,mgr.m_name,sr.s_phone \r\n" + 
+						"from store sr,manager mgr\r\n" + 
+						"where sr.m_id = mgr.m_id and sr.s_group = 2"; // 매장
+				String query2 = "select sr.s_group,sr.m_id,sr.s_name,hd.h_name,sr.s_phone \r\n" + 
 								"from store sr,head hd\r\n" + 
 								"where sr.h_id = hd.h_id and sr.s_group = 1"; // 본사
-				String query2 = "select sr.s_group,sr.m_id,sr.s_name,mgr.m_name,sr.s_phone \r\n" + 
-								"from store sr,manager mgr\r\n" + 
-								"where sr.m_id = mgr.m_id and sr.s_group = 2"; // 매장
 				// 해당 테이블에 구분,id,매장명,담당자이름,전화번호를 출력
 				pstmt1 = con.prepareStatement(query1);
 				rs1 = pstmt1.executeQuery();
