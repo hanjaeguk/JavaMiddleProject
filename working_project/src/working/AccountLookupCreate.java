@@ -15,6 +15,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -261,33 +262,48 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 			String phone = phoneField.getText();
 			String manage = managerField.getText();
 			
+			String checkPhone = "\\d{9,11}"; // 품번은 7자리로 고정
+			
+			boolean isCheckPhone = Pattern.matches(checkPhone, phone);
+
+			
 
 
-			if (radio1.equals("본사")) { // 본사
-				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty()) { // 필수사항이 공백이면
-					JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
-				}else { // 필수사항이 공백이 아니면
-					myDBcon.createAccount(id, password, personName, phone, storeName, id, radio1);
-					idField.setText(null);
-					passwordField.setText(null);
-					storeNameField.setText(null);
-					personNameField.setText(null);
-					phoneField.setText(null);
+
+				if (radio1.equals("본사")) { // 본사
+					if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty()) { // 필수사항이 공백이면
+						JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
+					}else { // 필수사항이 공백이 아니면
+						if(isCheckPhone == true ||phone.isEmpty()) {
+							myDBcon.createAccount(id, password, personName, phone, storeName, id, radio1);
+							idField.setText(null);
+							passwordField.setText(null);
+							storeNameField.setText(null);
+							personNameField.setText(null);
+							phoneField.setText(null);
+						}else {
+							JOptionPane.showMessageDialog(null, "전화번호는 숫자만 입력해주세요");
+						}
+					}
+					
+				} else { // 매장
+					if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty() || manage.isEmpty()) { // 필수사항이 공백이면
+						JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
+					}else { // 필수사항이 공백이아니면
+						if(isCheckPhone == true ||phone.isEmpty()) {
+							myDBcon.createAccount(id, password, personName, phone, storeName, manage, radio1);
+							idField.setText(null);
+							passwordField.setText(null);
+							storeNameField.setText(null);
+							personNameField.setText(null);
+							phoneField.setText(null);
+							managerField.setText(null);
+						}else {
+							JOptionPane.showMessageDialog(null, "전화번호는 숫자만 입력해주세요");
+						}
+					}
 				}
 
-			} else { // 매장
-				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty() || manage.isEmpty()) { // 필수사항이 공백이면
-					JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
-				}else { // 필수사항이 공백이아니면
-					myDBcon.createAccount(id, password, personName, phone, storeName, manage, radio1);
-					idField.setText(null);
-					passwordField.setText(null);
-					storeNameField.setText(null);
-					personNameField.setText(null);
-					phoneField.setText(null);
-					managerField.setText(null);
-				}
-			}
 
 		}
 
