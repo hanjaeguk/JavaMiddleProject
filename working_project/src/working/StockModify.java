@@ -102,9 +102,12 @@ public class StockModify extends JPanel {
 		JButton searchSizeButton = new JButton("재고 조회");
 		searchSizeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String productNo = proNoTextField.getText();
+				myDBcon.searchStockColor(colorComboBox, storeComboBox, productNo);
+				
+				if (colorComboBox.getSelectedItem() != null) {
 				String stockQuantity = "0";
 				String storeName = storeComboBox.getSelectedItem().toString();
-				String productNo = proNoTextField.getText();
 				String productColor = colorComboBox.getSelectedItem().toString();
 
 				myDBcon.searchSize(storeName, productNo, productColor, "S");
@@ -122,7 +125,7 @@ public class StockModify extends JPanel {
 				myDBcon.searchSize(storeName, productNo, productColor, "XL");
 				stockQuantity = myDBcon.getStockQuantity().toString();
 				XL_SizeField.setText(stockQuantity);
-
+				}
 			}
 		});
 
@@ -190,14 +193,22 @@ public class StockModify extends JPanel {
 		stockModifyPanel.add(updateButton);
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				String changeStockQuantity = S_SizeField.getText();
-				String storeName = storeComboBox.getSelectedItem().toString();
+			
 				String productNo = proNoTextField.getText();
-				String productColor = colorComboBox.getSelectedItem().toString();
+				myDBcon.searchStockColor(colorComboBox, storeComboBox, productNo);
 
-				myDBcon.updateStock(changeStockQuantity, storeName, productNo, productColor);
-
+				if(colorComboBox.getSelectedItem() != null) {
+					String changeStockQuantity = S_SizeField.getText();
+					String storeName = storeComboBox.getSelectedItem().toString();
+					String productColor = colorComboBox.getSelectedItem().toString();
+					myDBcon.updateStock(changeStockQuantity, storeName, productNo, productColor);
+					proNoTextField.setText(null);
+					colorComboBox.removeAllItems();
+					S_SizeField.setText(null);
+					M_SizeField.setText(null);
+					L_SizeField.setText(null);
+					XL_SizeField.setText(null);
+				}
 			}
 		});
 		updateButton.setFont(new Font("굴림", Font.PLAIN, 12));

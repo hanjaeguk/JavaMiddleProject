@@ -918,37 +918,66 @@ public void createAccount(String id, String password, String personName, String 
 		// 출력할 테이블, 라디오버튼(매장+본사, 매장, 본사 세개로 구분)
 
 		String query;
+		PreparedStatement pstmt1 = null;
+		ResultSet rs1 = null;
+		PreparedStatement pstmt2 = null;
+		ResultSet rs2 = null;
 
 		if (radio.equals("매장+본사")) {//라디오 버튼이 매장+본사일경우
 			try {
-				query = "select s_group,m_id,s_name,h_name,s_phone from store sr, head hd\r\n"
-						+ "where sr.h_id = hd.h_id order by 1 desc";
-				// 해당 테이블에 구분,id,매장명,담당자이름,전화번호를 출력(구분으로 내림차순)
-				pstmt = con.prepareStatement(query);
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					int checkGroup = rs.getInt(1);// 구분에서 1은 본사, 2는 매장
-					String group;
-					if(checkGroup == 1) { // 구분이 1이면
-						group = "본사";
-					}else { // 2이면
-						group = "매장";
+				String query1 = "select sr.s_group,sr.m_id,sr.s_name,hd.h_name,sr.s_phone \r\n" + 
+								"from store sr,head hd\r\n" + 
+								"where sr.h_id = hd.h_id and sr.s_group = 1"; // 본사
+				String query2 = "select sr.s_group,sr.m_id,sr.s_name,mgr.m_name,sr.s_phone \r\n" + 
+								"from store sr,manager mgr\r\n" + 
+								"where sr.m_id = mgr.m_id and sr.s_group = 2"; // 매장
+				// 해당 테이블에 구분,id,매장명,담당자이름,전화번호를 출력
+				pstmt1 = con.prepareStatement(query1);
+				rs1 = pstmt1.executeQuery();
+				pstmt2 = con.prepareStatement(query2);
+				rs2 = pstmt2.executeQuery();
+				while(rs1.next()) {
+					String group1;
+					int checkGroup1 = rs1.getInt(1);
+					if(checkGroup1 == 1) {
+						group1 = "본사";
+					}else {
+						group1 = "매장";
 					}
-					String id = rs.getString(2);
-					String storeName = rs.getString(3);
-					String manager = rs.getString(4);
-					String phone = rs.getString(5);
-					Object data[] = { group, id, storeName, manager, phone };
-					DefaultTableModel model = (DefaultTableModel) searchTable.getModel();
-					model.addRow(data);
+					String id1 = rs1.getString(2);
+					String storeName1 = rs1.getString(3);
+					String manager1 = rs1.getString(4);
+					String phone1 = rs1.getString(5);
+					Object data1[] = { group1, id1, storeName1, manager1, phone1 };
+					DefaultTableModel model1 = (DefaultTableModel) searchTable.getModel();
+					model1.addRow(data1);		
 				}
+					while(rs2.next()) {
+						String group2;
+						int checkGroup2 = rs2.getInt(1);
+						if(checkGroup2 == 1) {
+							group2 = "본사";
+						}else {
+							group2 = "매장";
+						}
+						String id2 = rs2.getString(2);
+						String storeName2 = rs2.getString(3);
+						String manager2 = rs2.getString(4);
+						String phone2 = rs2.getString(5);
+						Object data2[] = { group2, id2, storeName2, manager2, phone2 };
+						DefaultTableModel model2 = (DefaultTableModel) searchTable.getModel();
+						model2.addRow(data2);		
+					}
+			
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else if (radio.equals("매장")) { // 라디오버튼이 매장일 경우
 			try {
-				query = "select s_group,m_id,s_name,h_name,s_phone from store sr, head hd\r\n"
-						+ "where sr.h_id = hd.h_id\r\n" + "and s_group = 2";
+				query = "select sr.s_group,sr.m_id,sr.s_name,mgr.m_name,sr.s_phone \r\n" + 
+						"from store sr,manager mgr\r\n" + 
+						"where sr.m_id = mgr.m_id and sr.s_group = 2";
 				pstmt = con.prepareStatement(query);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
@@ -972,8 +1001,9 @@ public void createAccount(String id, String password, String personName, String 
 			}
 		} else if (radio.equals("본사")) {// 라디오 버튼이 본사일경우
 			try {
-				query = "select s_group,m_id,s_name,h_name,s_phone from store sr, head hd\r\n"
-						+ "where sr.h_id = hd.h_id\r\n" + "and s_group = 1";
+				query = "select sr.s_group,sr.m_id,sr.s_name,hd.h_name,sr.s_phone \r\n" + 
+						"from store sr,head hd\r\n" + 
+						"where sr.h_id = hd.h_id and sr.s_group = 1";
 				pstmt = con.prepareStatement(query);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {

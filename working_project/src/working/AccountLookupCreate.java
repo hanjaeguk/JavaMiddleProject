@@ -267,14 +267,25 @@ public class AccountLookupCreate extends JPanel implements ActionListener {
 				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty()) { // 필수사항이 공백이면
 					JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
 				}else { // 필수사항이 공백이 아니면
-					myDBcon.createAccount(id, password, personName, phone, storeName, id, radio1);					
+					myDBcon.createAccount(id, password, personName, phone, storeName, id, radio1);
+					idField.setText(null);
+					passwordField.setText(null);
+					storeNameField.setText(null);
+					personNameField.setText(null);
+					phoneField.setText(null);
 				}
 
 			} else { // 매장
 				if(id.isEmpty() || storeName.isEmpty() || personName.isEmpty() || manage.isEmpty()) { // 필수사항이 공백이면
 					JOptionPane.showMessageDialog(null, "필수사항(*)을 입력해주세요.");
 				}else { // 필수사항이 공백이아니면
-					myDBcon.createAccount(id, password, personName, phone, storeName, manage, radio1);					
+					myDBcon.createAccount(id, password, personName, phone, storeName, manage, radio1);
+					idField.setText(null);
+					passwordField.setText(null);
+					storeNameField.setText(null);
+					personNameField.setText(null);
+					phoneField.setText(null);
+					managerField.setText(null);
 				}
 			}
 

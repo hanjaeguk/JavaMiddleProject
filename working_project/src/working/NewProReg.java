@@ -142,6 +142,10 @@ public class NewProReg extends JPanel {
 				} else {
 					myDBcon.insertProduct(productCode, productNo, productColor, productSize, productPrice);
 					// productCode(상품코드) = 품번 + 색상 + 사이즈로 자동생성
+					productNoField.setText(null);
+					colorField.setText(null);
+					sizeField.setText(null);
+					priceField.setText(null);
 				}
 
 			}

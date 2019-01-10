@@ -67,6 +67,7 @@ public class ProdInfoModify extends JPanel {
 		originalPriceField.setEditable(false);
 
 		JButton searchButton = new JButton("조회");
+		searchButton.setFont(new Font("굴림", Font.PLAIN, 12));
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String price;
@@ -118,6 +119,9 @@ public class ProdInfoModify extends JPanel {
 						JOptionPane.showMessageDialog(null, "가격은 숫자로 입력해주세요.");
 					} else {
 						myDBcon.updatePrice(priceModify, productNo);
+						originalPriceField.setText(null);
+						priceModifyField.setText(null);
+						productNoField.setText(null);
 					}
 				}
 
