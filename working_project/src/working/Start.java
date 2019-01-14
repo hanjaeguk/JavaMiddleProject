@@ -15,7 +15,6 @@ public class Start {
 
 	public static void main(String[] args) {
 		Start start = new Start();
-		
 		start.loginView = new LoginView(); // 로그인창 열기
 		start.loginView.setMain(start); // 로그인창에게 메인 클래스 보내기
 	}

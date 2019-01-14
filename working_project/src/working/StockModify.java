@@ -196,17 +196,24 @@ public class StockModify extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 			
 				if(colorComboBox.getSelectedItem() != null) {
+					
 					String productNo = proNoTextField.getText();
-					String changeStockQuantity = S_SizeField.getText();
 					String storeName = storeComboBox.getSelectedItem().toString();
 					String productColor = colorComboBox.getSelectedItem().toString();
-					myDBcon.updateStock(changeStockQuantity, storeName, productNo, productColor);
+					String S_changeStockQuantity = S_SizeField.getText();
+					String M_changeStockQuantity = M_SizeField.getText();
+					String L_changeStockQuantity = L_SizeField.getText();
+					String XL_changeStockQuantity = XL_SizeField.getText();
+					
+					myDBcon.updateStock(S_changeStockQuantity, storeName, productNo, productColor);
+										
 					proNoTextField.setText(null);
 					colorComboBox.removeAllItems();
 					S_SizeField.setText(null);
 					M_SizeField.setText(null);
 					L_SizeField.setText(null);
 					XL_SizeField.setText(null);
+					
 				}else {
 					JOptionPane.showMessageDialog(null, "상품 재고를 먼저 조회해주세요.");
 				}
